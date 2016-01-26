@@ -1,0 +1,15 @@
+[package]
+name = "goji"
+version = "0.1.0"
+authors = ["softprops <d.tangren@gmail.com>"]
+description = "Rust interface for Jira"
+documentation = "http://softprops.github.io/goji"
+homepage = "https://github.com/softprops/goji"
+repository = "https://github.com/softprops/goji"
+keywords = ["hyper", "jira"]
+license = "MIT"
+
+[dependencies]
+hyper = "0.7"
+rustc-serialize = "0.3"
+url = "0.5.2"
