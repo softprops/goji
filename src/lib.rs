@@ -8,7 +8,10 @@ use hyper::client::Client;
 use hyper::method::Method;
 use hyper::header::{ContentType, Authorization, Basic};
 use std::io::Read;
-use url::form_urlencoded;
+
+pub mod builder;
+
+pub use builder::SearchOptions;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
@@ -27,9 +30,12 @@ impl Jira {
         }
     }
 
-    pub fn search(&self, jql: &str) -> Result<String> {
-        let query = &form_urlencoded::serialize(vec![("jql", jql)])[..];
-        self.get(vec!["/search", query].join("?").as_ref())
+    pub fn search(&self, opts: &SearchOptions) -> Result<String> {
+        let mut path = vec!["/search".to_owned()];
+        if let Some(q) = opts.serialize() {
+            path.push(q);
+        }
+        self.get(path.join("?").as_ref())
     }
 
     pub fn issue(&self, id: &str) -> Result<String> {
