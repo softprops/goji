@@ -51,6 +51,16 @@ impl SearchOptionsBuilder {
         self
     }
 
+    pub fn max(&mut self, m: u64) -> &mut SearchOptionsBuilder {
+        self.params.insert("maxResults", m.to_string());
+        self
+    }
+
+    pub fn start_at(&mut self, s: u64) -> &mut SearchOptionsBuilder {
+        self.params.insert("startAt", s.to_string());
+        self
+    }
+
     pub fn expand<E>(&mut self, ex: Vec<E>) -> &mut SearchOptionsBuilder
         where E: Into<String>
     {
