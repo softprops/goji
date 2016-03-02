@@ -8,8 +8,19 @@ homepage = "https://github.com/softprops/goji"
 repository = "https://github.com/softprops/goji"
 keywords = ["hyper", "jira"]
 license = "MIT"
+build = "build.rs"
+
+[dev-dependencies]
+env_logger = "0.3"
 
 [dependencies]
+log = "0.3"
 hyper = "0.7"
 rustc-serialize = "0.3"
 url = "0.5.2"
+serde = "0.7"
+serde_json = "0.7"
+
+[build-dependencies]
+serde_codegen = "0.7"
+syntex = "0.29"

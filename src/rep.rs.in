@@ -1,0 +1,20 @@
+#[derive(Deserialize, Debug)]
+pub struct Issue {
+    #[serde(rename="self")]
+    self_link: String,
+    key: String,
+    id: u32,
+    expand: String,
+    fields: ::std::collections::HashMap<String, ::serde_json::Value>
+}
+
+#[derive(Deserialize, Debug)]
+pub struct SearchResults {
+    total: u32,
+    #[serde(rename="maxResults")]
+    max_results: u32,
+    #[serde(rename="startAt")]
+    start_at: u32,
+    expand: String,
+    issues: Vec<Issue>
+}

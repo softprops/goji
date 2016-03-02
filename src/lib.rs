@@ -1,9 +1,15 @@
+#[macro_use]
+extern crate log;
 extern crate hyper;
 extern crate rustc_serialize;
 extern crate url;
+extern crate serde;
+extern crate serde_json;
 
 pub mod errors;
 pub use errors::Error;
+pub mod rep;
+pub use rep::SearchResults;
 use hyper::client::Client;
 use hyper::method::Method;
 use hyper::header::{ContentType, Authorization, Basic};
@@ -15,6 +21,7 @@ pub use builder::SearchOptions;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
+/// https://docs.atlassian.com/jira/REST/latest/
 pub struct Jira {
     host: String,
     username: String,
@@ -30,14 +37,18 @@ impl Jira {
         }
     }
 
-    pub fn search(&self, opts: &SearchOptions) -> Result<String> {
+    /// https://docs.atlassian.com/jira/REST/latest/#api/2/search
+    pub fn search(&self, opts: &SearchOptions) -> Result<SearchResults> {
         let mut path = vec!["/search".to_owned()];
         if let Some(q) = opts.serialize() {
             path.push(q);
         }
-        self.get(path.join("?").as_ref())
+        let body = try!(self.get(path.join("?").as_ref()));
+        let parsed = try!(serde_json::from_str(&body));
+        Ok(parsed)
     }
 
+    // https://docs.atlassian.com/jira/REST/latest/#api/2/issue
     pub fn issue(&self, id: &str) -> Result<String> {
         self.get(format!("/issue/{}", id).as_ref())
     }
@@ -60,6 +71,7 @@ impl Jira {
         let mut res = try!(req.send());
         let mut buf = String::new();
         try!(res.read_to_string(&mut buf));
+        debug!("{:?}", buf);
         Ok(buf)
     }
 }
