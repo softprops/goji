@@ -17,7 +17,9 @@ impl SearchOptions {
         if self.params.is_empty() {
             None
         } else {
-            Some(form_urlencoded::serialize(&self.params))
+            Some(form_urlencoded::Serializer::new(String::new())
+                .extend_pairs(&self.params)
+                .finish())
         }
     }
 }
@@ -42,7 +44,8 @@ impl SearchOptionsBuilder {
     pub fn fields<F>(&mut self, fs: Vec<F>) -> &mut SearchOptionsBuilder
         where F: Into<String>
     {
-        self.params.insert("fields", fs.into_iter().map(|f|f.into()).collect::<Vec<String>>().join(","));
+        self.params.insert("fields",
+                           fs.into_iter().map(|f| f.into()).collect::<Vec<String>>().join(","));
         self
     }
 
@@ -64,7 +67,8 @@ impl SearchOptionsBuilder {
     pub fn expand<E>(&mut self, ex: Vec<E>) -> &mut SearchOptionsBuilder
         where E: Into<String>
     {
-        self.params.insert("expand", ex.into_iter().map(|e|e.into()).collect::<Vec<String>>().join(","));
+        self.params.insert("expand",
+                           ex.into_iter().map(|e| e.into()).collect::<Vec<String>>().join(","));
         self
     }
 

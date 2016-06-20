@@ -2,7 +2,7 @@ use std::io::Error as IoError;
 use hyper::Error as HttpError;
 use hyper::status::StatusCode;
 use rustc_serialize::json::{DecoderError, EncoderError, ParserError};
-use serde_json::error::{Error as SerdeError};
+use serde_json::error::Error as SerdeError;
 
 #[derive(Debug)]
 pub enum Error {

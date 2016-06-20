@@ -6,39 +6,39 @@ extern crate url;
 extern crate serde;
 extern crate serde_json;
 
-pub mod errors;
-pub use errors::Error;
-pub mod rep;
-pub use rep::SearchResults;
 use hyper::client::{Client, RequestBuilder};
 use hyper::method::Method;
 use hyper::header::{ContentType, Authorization, Basic};
 use std::io::Read;
 
-pub mod builder;
-
-pub use builder::SearchOptions;
+mod builder;
+pub use builder::*;
+mod errors;
+pub use errors::*;
+mod rep;
+pub use rep::*;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
 pub enum Credentials {
-    Basic(String, String),
-    // todo: OAuth
+    Basic(String, String), // todo: OAuth
 }
 
 /// https://docs.atlassian.com/jira/REST/latest/
 pub struct Jira<'a> {
     host: String,
     credentials: Credentials,
-    client: &'a Client
+    client: &'a Client,
 }
 
 impl<'a> Jira<'a> {
-    pub fn new<H>(host: H, credentials: Credentials, client: &'a Client) -> Jira<'a> where H: Into<String> {
+    pub fn new<H>(host: H, credentials: Credentials, client: &'a Client) -> Jira<'a>
+        where H: Into<String>
+    {
         Jira {
             host: host.into(),
             credentials: credentials,
-            client: client
+            client: client,
         }
     }
 
@@ -67,15 +67,12 @@ impl<'a> Jira<'a> {
         debug!("url -> {:?}", url);
         match self.credentials {
             Credentials::Basic(ref user, ref pass) => {
-                self.client.request(method, &url)
-                    .header(
-                        Authorization(
-                            Basic {
-                                username: user.to_owned(),
-                                password: Some(pass.to_owned())
-                            }
-                       )
-                    )
+                self.client
+                    .request(method, &url)
+                    .header(Authorization(Basic {
+                        username: user.to_owned(),
+                        password: Some(pass.to_owned()),
+                    }))
             }
         }
     }
@@ -93,5 +90,4 @@ impl<'a> Jira<'a> {
 
 
 #[test]
-fn it_works() {
-}
+fn it_works() {}

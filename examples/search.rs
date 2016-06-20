@@ -8,14 +8,24 @@ use std::env;
 
 fn main() {
     env_logger::init().unwrap();
-    if let (Some(host), Some(user), Some(pass)) = (env::args().nth(1), env::args().nth(2), env::args().nth(3)) {
+    if let (Ok(host), Ok(user), Ok(pass)) = (env::var("JIRA_HOST"), env::var("JIRA_USER"), env::var("JIRA_PASS")) {
+        let query = env::args().nth(1).unwrap_or("assignee=doug".to_owned());
         let client = Client::new();
         let jira = Jira::new(host, Credentials::Basic(user, pass), &client);
-        println!("{:#?}", jira.search(
+        let search = jira.search(
             &SearchOptions::builder()
-                .jql("assignee=doug")
+                .jql(query)
                 .build()
-            )
-        );
+         );
+        if let Ok(results) = search {
+            for issue in results.issues {
+                println!("{} {} ({}): reporter {} assignee {}",
+                         issue.key,
+                         issue.summary().unwrap_or("???".to_owned()),
+                         issue.status().map(|value| value.name).unwrap_or("???".to_owned()),
+                         issue.reporter().map(|value| value.display_name).unwrap_or("???".to_owned()),
+                         issue.assignee().map(|value| value.display_name).unwrap_or("???".to_owned()));
+            }
+        }
     }
 }
