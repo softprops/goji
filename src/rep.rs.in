@@ -4,7 +4,7 @@ pub struct Issue {
     pub self_link: String,
     pub key: String,
     pub id: u32,
-    pub expand: String,
+//    pub expand: String,
     pub fields: ::std::collections::HashMap<String, ::serde_json::Value>
 }
 
@@ -67,6 +67,37 @@ impl Issue {
     pub fn fix_versions(&self) -> Vec<Version> {
         self.field::<Vec<Version>>("fixVersions").and_then(|value| value.ok()).unwrap_or(vec![])
     }
+
+    pub fn priority(&self) -> Option<Priority> {
+        self.field::<Priority>("priority").and_then(|value| value.ok())
+    }
+
+    pub fn links(&self) -> Option<Result<Vec<IssueLink>>> {
+        self.field::<Vec<IssueLink>>("issuelinks")//.and_then(|value| value.ok()).unwrap_or(vec![])
+    }
+}
+
+#[derive(Deserialize, Debug)]
+pub struct IssueLink {
+    pub id: String,
+    #[serde(rename="self")]
+    pub self_link: String,
+    #[serde(rename="outwardIssue")]
+    pub outward_issue: Option<Issue>,
+    #[serde(rename="inwardIssue")]
+    pub inward_issue: Option<Issue>,
+    #[serde(rename="type")]
+    pub link_type: LinkType
+}
+
+#[derive(Deserialize, Debug)]
+pub struct LinkType {
+    pub id: String,
+    pub inward: String,
+    pub name: String,
+    pub outward: String,
+    #[serde(rename="self")]
+    pub self_link: String,
 }
 
 #[derive(Deserialize, Debug)]
@@ -100,6 +131,15 @@ pub struct User {
 pub struct Status {
     pub description: String,
     #[serde(rename="iconUrl")]
+    pub icon_url: String,
+    pub id: String,
+    pub name: String,
+    #[serde(rename="self")]
+    pub self_link: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Priority {
     pub icon_url: String,
     pub id: String,
     pub name: String,
