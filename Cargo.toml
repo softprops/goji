@@ -23,4 +23,4 @@ serde_json = "0.7"
 
 [build-dependencies]
 serde_codegen = "0.7"
-syntex = "0.29"
+syntex = "0.35"
