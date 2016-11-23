@@ -16,11 +16,9 @@ env_logger = "0.3"
 [dependencies]
 log = "0.3"
 hyper = "0.9"
-rustc-serialize = "0.3"
-url = "1.1"
-serde = "0.7"
-serde_json = "0.7"
+url = "1.2"
+serde = "0.8"
+serde_json = "0.8"
 
 [build-dependencies]
-serde_codegen = "0.7"
-syntex = "0.35"
+serde_codegen = "0.8"
