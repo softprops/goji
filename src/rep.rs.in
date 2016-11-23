@@ -1,3 +1,11 @@
+
+#[derive(Deserialize, Debug)]
+pub struct Errors {
+  #[serde(rename="errorMessages")]
+  pub error_messages: Vec<String>,
+  pub errors: BTreeMap<String, String>
+}
+
 #[derive(Deserialize, Debug)]
 pub struct Issue {
     #[serde(rename="self")]
@@ -5,7 +13,7 @@ pub struct Issue {
     pub key: String,
     pub id: u32,
 //    pub expand: String,
-    pub fields: ::std::collections::HashMap<String, ::serde_json::Value>
+    pub fields: BTreeMap<String, ::serde_json::Value>
 }
 
 impl Issue {
@@ -114,7 +122,7 @@ pub struct Version {
 pub struct User {
     pub active: bool,
     #[serde(rename="avatarUrls")]
-    pub avatar_urls: ::std::collections::HashMap<String, String>,
+    pub avatar_urls: BTreeMap<String, String>,
     #[serde(rename="displayName")]
     pub display_name: String,
     #[serde(rename="emailAddress")]
@@ -168,4 +176,91 @@ pub struct SearchResults {
     pub start_at: u32,
     pub expand: String,
     pub issues: Vec<Issue>
+}
+
+#[derive(Deserialize, Debug)]
+pub struct TransitionData {
+  pub id: String,
+  pub name: String,
+  pub to: TransitionTo
+}
+
+#[derive(Deserialize, Debug)]
+pub struct TransitionTo {
+  pub name: String,
+  pub id: String
+}
+
+#[derive(Deserialize, Debug)]
+pub struct TransitionsWrapper {
+  pub transitions: Vec<TransitionData>
+}
+
+// todo: better name
+#[derive(Serialize, Debug)]
+pub struct TransitionWrapper {
+    pub transition: Transition,
+    pub fields: BTreeMap<String, ::serde_json::Value>
+}
+
+impl TransitionWrapper {
+  /// creates a new instance
+  pub fn new<I>(id: I) -> TransitionWrapper where I: Into<String> {
+    TransitionWrapper {
+      transition: Transition {
+        id: id.into()
+      },
+      fields: BTreeMap::new()
+    }
+  }
+
+  pub fn builder<I>(id: I) -> TransitionWrapperBuilder where I: Into<String> {
+    TransitionWrapperBuilder::new(id)
+  }
+}
+
+pub struct TransitionWrapperBuilder {
+    pub transition: Transition,
+    pub fields: BTreeMap<String, ::serde_json::Value>
+}
+
+impl TransitionWrapperBuilder {
+  /// creates a new instance
+  pub fn new<I>(id: I) -> TransitionWrapperBuilder where I: Into<String> {
+    TransitionWrapperBuilder {
+      transition: Transition {
+        id: id.into()
+      },
+      fields: BTreeMap::new()
+    }
+  }
+
+  /// appends a field to update as part of transition
+  pub fn field<N, V>(&mut self, name: N, value: V) -> &mut TransitionWrapperBuilder where N: Into<String>, V: Serialize {
+    self.fields.insert(name.into(), serde_json::to_value(value));
+    self
+  }
+
+  /// updates resolution in transition
+  pub fn resolution<R>(&mut self, name: R) -> &mut TransitionWrapperBuilder where R: Into<String> {
+    self.field("resolution", Resolution { name: name.into() });
+    self
+  }
+
+  pub fn build(&self) -> TransitionWrapper {
+    TransitionWrapper {
+      transition: self.transition.clone(),
+      fields: self.fields.clone()
+    }
+  }
+}
+
+#[derive(Serialize, Debug)]
+pub struct Resolution {
+  name: String
+}
+
+#[derive(Serialize, Clone, Debug)]
+pub struct Transition {
+  pub id: String
 }

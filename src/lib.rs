@@ -1,7 +1,8 @@
+//! Goji provides an interface for Jira's REST api
+
 #[macro_use]
 extern crate log;
 extern crate hyper;
-extern crate rustc_serialize;
 extern crate url;
 extern crate serde;
 extern crate serde_json;
@@ -9,8 +10,11 @@ extern crate serde_json;
 use hyper::client::{Client, RequestBuilder};
 use hyper::method::Method;
 use hyper::header::{ContentType, Authorization, Basic};
+use serde::{Deserialize, Serialize};
 use std::io::Read;
 
+mod transitions;
+pub use transitions::*;
 mod builder;
 pub use builder::*;
 mod errors;
@@ -20,10 +24,12 @@ pub use rep::*;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
+/// Types of authentication credentials
 pub enum Credentials {
     Basic(String, String), // todo: OAuth
 }
 
+/// Entrypoint into client interface
 /// https://docs.atlassian.com/jira/REST/latest/
 pub struct Jira<'a> {
     host: String,
@@ -42,15 +48,18 @@ impl<'a> Jira<'a> {
         }
     }
 
+    /// return transitions interface
+    pub fn transitions(&self, key: &str) -> Transitions {
+        Transitions::new(self, key)
+    }
+
     /// https://docs.atlassian.com/jira/REST/latest/#api/2/search
     pub fn search(&self, opts: &SearchOptions) -> Result<SearchResults> {
         let mut path = vec!["/search".to_owned()];
         if let Some(q) = opts.serialize() {
             path.push(q);
         }
-        let body = try!(self.get(path.join("?").as_ref()));
-        let parsed = try!(serde_json::from_str(&body));
-        Ok(parsed)
+        self.get::<SearchResults>(path.join("?").as_ref())
     }
 
     // https://docs.atlassian.com/jira/REST/latest/#api/2/issue
@@ -58,8 +67,18 @@ impl<'a> Jira<'a> {
         self.get(format!("/issue/{}", id).as_ref())
     }
 
-    fn get(&self, endpoint: &str) -> Result<String> {
-        self.request(Method::Get, endpoint)
+    fn post<D, S>(&self, endpoint: &str, body: S) -> Result<D>
+        where D: Deserialize,
+              S: Serialize
+    {
+        let data = try!(serde_json::to_string::<S>(&body));
+        self.request::<D>(Method::Post, endpoint, Some(data.as_bytes()))
+    }
+
+    fn get<D>(&self, endpoint: &str) -> Result<D>
+        where D: Deserialize
+    {
+        self.request::<D>(Method::Get, endpoint, None)
     }
 
     fn authenticate(&self, method: Method, uri: &str) -> RequestBuilder {
@@ -77,14 +96,27 @@ impl<'a> Jira<'a> {
         }
     }
 
-    fn request(&self, method: Method, endpoint: &str) -> Result<String> {
-        let req = self.authenticate(method, endpoint)
+    fn request<D>(&self, method: Method, endpoint: &str, body: Option<&'a [u8]>) -> Result<D>
+        where D: Deserialize
+    {
+        let builder = self.authenticate(method, endpoint)
             .header(ContentType::json());
-        let mut res = try!(req.send());
-        let mut buf = String::new();
-        try!(res.read_to_string(&mut buf));
-        debug!("{:?}", buf);
-        Ok(buf)
+
+        let mut res = try!(match body {
+            Some(ref bod) => builder.body(*bod).send(),
+            _ => builder.send(),
+        });
+        let mut body = String::new();
+        try!(res.read_to_string(&mut body));
+        debug!("status {:?} body '{:?}'", res.status, body);
+        if res.status.is_client_error() {
+            Err(Error::Fault {
+                code: res.status,
+                errors: try!(serde_json::from_str::<Errors>(&body)),
+            })
+        } else {
+            Ok(try!(serde_json::from_str::<D>(&body)))
+        }
     }
 }
 

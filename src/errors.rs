@@ -1,44 +1,20 @@
 use std::io::Error as IoError;
 use hyper::Error as HttpError;
 use hyper::status::StatusCode;
-use rustc_serialize::json::{DecoderError, EncoderError, ParserError};
 use serde_json::error::Error as SerdeError;
+use super::Errors;
 
 #[derive(Debug)]
 pub enum Error {
-    Decoding(DecoderError),
-    Encoding(EncoderError),
-    Parse(ParserError),
     Http(HttpError),
     IO(IoError),
     Serde(SerdeError),
-    Fault {
-        code: StatusCode,
-        message: String,
-    },
+    Fault { code: StatusCode, errors: Errors },
 }
 
 impl From<SerdeError> for Error {
     fn from(error: SerdeError) -> Error {
         Error::Serde(error)
-    }
-}
-
-impl From<ParserError> for Error {
-    fn from(error: ParserError) -> Error {
-        Error::Parse(error)
-    }
-}
-
-impl From<DecoderError> for Error {
-    fn from(error: DecoderError) -> Error {
-        Error::Decoding(error)
-    }
-}
-
-impl From<EncoderError> for Error {
-    fn from(error: EncoderError) -> Error {
-        Error::Encoding(error)
     }
 }
 
