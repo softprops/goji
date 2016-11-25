@@ -63,7 +63,7 @@ impl<'a> Jira<'a> {
     }
 
     // https://docs.atlassian.com/jira/REST/latest/#api/2/issue
-    pub fn issue(&self, id: &str) -> Result<String> {
+    pub fn issue(&self, id: &str) -> Result<Issue> {
         self.get(format!("/issue/{}", id).as_ref())
     }
 
