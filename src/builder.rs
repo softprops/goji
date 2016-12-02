@@ -37,13 +37,6 @@ impl SearchOptionsBuilder {
         SearchOptionsBuilder { ..Default::default() }
     }
 
-    pub fn jql<J>(&mut self, q: J) -> &mut SearchOptionsBuilder
-        where J: Into<String>
-    {
-        self.params.insert("jql", q.into());
-        self
-    }
-
     pub fn fields<F>(&mut self, fs: Vec<F>) -> &mut SearchOptionsBuilder
         where F: Into<String>
     {

@@ -25,11 +25,7 @@ fn main() {
         let query = env::args().nth(1).unwrap();
         let client = Client::new();
         let jira = Jira::new(host, Credentials::Basic(user, pass), &client);
-        let results = jira.search().list(
-            &SearchOptions::builder()
-                .jql(query)
-                .build()
-         ).unwrap()
+        let results = jira.search().list(query, &Default::default());
           for issue in results.unwrap().issues {
             println!("{:#?}", issue)
          }

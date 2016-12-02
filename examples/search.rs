@@ -3,7 +3,7 @@ extern crate goji;
 extern crate hyper;
 
 use hyper::Client;
-use goji::{Credentials, Jira, SearchOptions};
+use goji::{Credentials, Jira};
 use std::env;
 
 fn main() {
@@ -12,11 +12,7 @@ fn main() {
         let query = env::args().nth(1).unwrap_or("assignee=doug".to_owned());
         let client = Client::new();
         let jira = Jira::new(host, Credentials::Basic(user, pass), &client);
-        let search = jira.search().list(
-            &SearchOptions::builder()
-                .jql(query)
-                .build()
-         );
+        let search = jira.search().list(query, &Default::default());
         if let Ok(results) = search {
             for issue in results.issues {
                 println!("{} {} ({}): reporter {} assignee {}",

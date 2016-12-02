@@ -1,4 +1,5 @@
 use super::{Jira, Result, SearchOptions, SearchResults};
+use url::form_urlencoded;
 
 // search interface
 pub struct Search<'a> {
@@ -11,11 +12,15 @@ impl<'a> Search<'a> {
     }
 
     /// https://docs.atlassian.com/jira/REST/latest/#api/2/search
-    pub fn list(&self, opts: &SearchOptions) -> Result<SearchResults> {
+    pub fn list<J>(&self, jql: J, options: &SearchOptions) -> Result<SearchResults>
+        where J: Into<String>
+    {
         let mut path = vec!["/search".to_owned()];
-        if let Some(q) = opts.serialize() {
-            path.push(q);
-        }
+        let query_options = options.serialize().unwrap_or(String::new());
+        let query = form_urlencoded::Serializer::new(query_options)
+            .append_pair("jql", &jql.into())
+            .finish();
+        path.push(query);
         self.jira.get::<SearchResults>(path.join("?").as_ref())
     }
 }
