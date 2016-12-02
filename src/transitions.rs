@@ -1,6 +1,7 @@
 
-use super::{Error, Jira, Result, TransitionsWrapper, TransitionData, TransitionWrapper};
+use super::{Error, Jira, Result, TransitionOptions, TransitionOption, TransitionTrigger};
 
+/// issue transition options
 pub struct Transitions<'a> {
     jira: &'a Jira<'a>,
     key: String,
@@ -16,18 +17,19 @@ impl<'a> Transitions<'a> {
         }
     }
 
-    /// return list of transitions available to an issue
-    pub fn list(&self) -> Result<Vec<TransitionData>> {
+    /// return list of transitions options for this issue
+    pub fn list(&self) -> Result<Vec<TransitionOption>> {
         self.jira
-            .get::<TransitionsWrapper>(&format!("/issue/{}/transitions?expand=transitions.fields",
-                                                self.key))
+            .get::<TransitionOptions>(&format!("/issue/{}/transitions?expand=transitions.fields",
+                                               self.key))
             .map(|wrapper| wrapper.transitions)
     }
 
-    /// trigger a transition
-    pub fn trigger(&self, trans: TransitionWrapper) -> Result<()> {
+    /// trigger a issue transition
+    /// to transition with a resolution use TransitionTrigger::builder(id).resolution(name)
+    pub fn trigger(&self, trans: TransitionTrigger) -> Result<()> {
         self.jira
-            .post::<(), TransitionWrapper>(&format!("/issue/{}/transitions", self.key), trans)
+            .post::<(), TransitionTrigger>(&format!("/issue/{}/transitions", self.key), trans)
             .or_else(|e| match e {
                 Error::Serde(_) => Ok(()),
                 e => Err(e),

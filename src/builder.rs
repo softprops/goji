@@ -1,6 +1,7 @@
 use url::form_urlencoded;
 use std::collections::HashMap;
 
+/// options availble for search
 #[derive(Default)]
 pub struct SearchOptions {
     params: HashMap<&'static str, String>,
@@ -24,6 +25,8 @@ impl SearchOptions {
     }
 }
 
+/// a builder interface for search option
+/// Typically this is initialized with SearchOptions::builder()
 #[derive(Default)]
 pub struct SearchOptionsBuilder {
     params: HashMap<&'static str, String>,

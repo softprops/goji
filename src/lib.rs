@@ -15,6 +15,8 @@ use std::io::Read;
 
 mod transitions;
 pub use transitions::*;
+mod search;
+pub use search::*;
 mod builder;
 pub use builder::*;
 mod errors;
@@ -38,6 +40,7 @@ pub struct Jira<'a> {
 }
 
 impl<'a> Jira<'a> {
+    /// creates a new instance of a jira client
     pub fn new<H>(host: H, credentials: Credentials, client: &'a Client) -> Jira<'a>
         where H: Into<String>
     {
@@ -49,17 +52,14 @@ impl<'a> Jira<'a> {
     }
 
     /// return transitions interface
-    pub fn transitions(&self, key: &str) -> Transitions {
+    pub fn transitions<K>(&self, key: K) -> Transitions
+        where K: Into<String>
+    {
         Transitions::new(self, key)
     }
 
-    /// https://docs.atlassian.com/jira/REST/latest/#api/2/search
-    pub fn search(&self, opts: &SearchOptions) -> Result<SearchResults> {
-        let mut path = vec!["/search".to_owned()];
-        if let Some(q) = opts.serialize() {
-            path.push(q);
-        }
-        self.get::<SearchResults>(path.join("?").as_ref())
+    pub fn search(&self) -> Search {
+        Search::new(self)
     }
 
     // https://docs.atlassian.com/jira/REST/latest/#api/2/issue
@@ -119,7 +119,6 @@ impl<'a> Jira<'a> {
         }
     }
 }
-
 
 #[test]
 fn it_works() {}

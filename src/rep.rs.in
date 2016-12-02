@@ -1,4 +1,5 @@
 
+/// represents an general jira error response
 #[derive(Deserialize, Debug)]
 pub struct Errors {
   #[serde(rename="errorMessages")]
@@ -6,6 +7,7 @@ pub struct Errors {
   pub errors: BTreeMap<String, String>
 }
 
+/// represents a single jira issue
 #[derive(Deserialize, Debug)]
 pub struct Issue {
     #[serde(rename="self")]
@@ -17,6 +19,7 @@ pub struct Issue {
 }
 
 impl Issue {
+    /// resolves a typed field from an issues lists of arbitrary fields
     pub fn field<F>(&self, name: &str) -> Option<Result<F>> where  F: Deserialize {
         self.fields.get(name).map(|value| {
             let decoded = try!(serde_json::value::from_value::<F>(value.clone()));
@@ -32,59 +35,94 @@ impl Issue {
         self.field::<String>(name)
     }
 
+    /// user assigned to issue
     pub fn assignee(&self) -> Option<User> {
         self.user_field("assignee").and_then(|value| value.ok())
     }
 
+    /// user that created the issue
     pub fn creator(&self) -> Option<User> {
         self.user_field("creator").and_then(|value| value.ok())
     }
 
+    /// user that reported the issue
     pub fn reporter(&self) -> Option<User> {
         self.user_field("reporter").and_then(|value| value.ok())
     }
 
+    /// the current status of the issue
     pub fn status(&self) -> Option<Status> {
         self.field::<Status>("status").and_then(|value| value.ok())
     }
 
+    /// brief summary of the issue
     pub fn summary(&self) -> Option<String> {
         self.string_field("summary").and_then(|value| value.ok())
     }
 
+    /// description of the issue
     pub fn description(&self) -> Option<String> {
         self.string_field("description").and_then(|value| value.ok())
     }
 
+    /// updated timestamp
     pub fn updated(&self) -> Option<String> {
         self.string_field("updated").and_then(|value| value.ok())
     }
 
+    /// created timestamp
     pub fn created(&self) -> Option<String> {
         self.string_field("created").and_then(|value| value.ok())
     }
 
+    pub fn resolution_date(&self) -> Option<String> {
+      self.string_field("resolution_date").and_then(|value| value.ok())
+    }
+
+    /// an issue type
     pub fn issue_type(&self) -> Option<IssueType> {
         self.field::<IssueType>("issuetype").and_then(|value| value.ok())
     }
 
+    /// labels associated with the issue
     pub fn labels(&self) -> Vec<String> {
         self.field::<Vec<String>>("labels").and_then(|value| value.ok()).unwrap_or(vec![])
     }
 
+    /// list of versions associated with the issue
     pub fn fix_versions(&self) -> Vec<Version> {
         self.field::<Vec<Version>>("fixVersions").and_then(|value| value.ok()).unwrap_or(vec![])
     }
 
+    /// priority of the issue
     pub fn priority(&self) -> Option<Priority> {
         self.field::<Priority>("priority").and_then(|value| value.ok())
     }
 
+    /// links to other issues
     pub fn links(&self) -> Option<Result<Vec<IssueLink>>> {
         self.field::<Vec<IssueLink>>("issuelinks")//.and_then(|value| value.ok()).unwrap_or(vec![])
     }
+
+    pub fn project(&self) -> Option<Project> {
+        self.field::<Project>("project").and_then(|value| value.ok())
+    }
+
+    pub fn resolution(&self) -> Option<Resolution> {
+      self.field::<Resolution>("resolution").and_then(|value| value.ok())
+    }
 }
 
+
+#[derive(Deserialize, Debug)]
+pub struct Project {
+  pub id: String,
+  pub key: String,
+  pub name: String
+}
+
+
+/// represents link relationship between issues
 #[derive(Deserialize, Debug)]
 pub struct IssueLink {
     pub id: String,
@@ -98,6 +136,7 @@ pub struct IssueLink {
     pub link_type: LinkType
 }
 
+/// represents type of issue relation
 #[derive(Deserialize, Debug)]
 pub struct LinkType {
     pub id: String,
@@ -179,7 +218,7 @@ pub struct SearchResults {
 }
 
 #[derive(Deserialize, Debug)]
-pub struct TransitionData {
+pub struct TransitionOption {
   pub id: String,
   pub name: String,
   pub to: TransitionTo
@@ -191,22 +230,22 @@ pub struct TransitionTo {
   pub id: String
 }
 
+/// contains list of options an issue can transitions through
 #[derive(Deserialize, Debug)]
-pub struct TransitionsWrapper {
-  pub transitions: Vec<TransitionData>
+pub struct TransitionOptions {
+  pub transitions: Vec<TransitionOption>
 }
 
-// todo: better name
 #[derive(Serialize, Debug)]
-pub struct TransitionWrapper {
+pub struct TransitionTrigger {
     pub transition: Transition,
     pub fields: BTreeMap<String, ::serde_json::Value>
 }
 
-impl TransitionWrapper {
+impl TransitionTrigger {
   /// creates a new instance
-  pub fn new<I>(id: I) -> TransitionWrapper where I: Into<String> {
-    TransitionWrapper {
+  pub fn new<I>(id: I) -> TransitionTrigger where I: Into<String> {
+    TransitionTrigger {
       transition: Transition {
         id: id.into()
       },
@@ -214,20 +253,20 @@ impl TransitionWrapper {
     }
   }
 
-  pub fn builder<I>(id: I) -> TransitionWrapperBuilder where I: Into<String> {
-    TransitionWrapperBuilder::new(id)
+  pub fn builder<I>(id: I) -> TransitionTriggerBuilder where I: Into<String> {
+    TransitionTriggerBuilder::new(id)
   }
 }
 
-pub struct TransitionWrapperBuilder {
+pub struct TransitionTriggerBuilder {
     pub transition: Transition,
     pub fields: BTreeMap<String, ::serde_json::Value>
 }
 
-impl TransitionWrapperBuilder {
+impl TransitionTriggerBuilder {
   /// creates a new instance
-  pub fn new<I>(id: I) -> TransitionWrapperBuilder where I: Into<String> {
-    TransitionWrapperBuilder {
+  pub fn new<I>(id: I) -> TransitionTriggerBuilder where I: Into<String> {
+    TransitionTriggerBuilder {
       transition: Transition {
         id: id.into()
       },
@@ -236,26 +275,26 @@ impl TransitionWrapperBuilder {
   }
 
   /// appends a field to update as part of transition
-  pub fn field<N, V>(&mut self, name: N, value: V) -> &mut TransitionWrapperBuilder where N: Into<String>, V: Serialize {
+  pub fn field<N, V>(&mut self, name: N, value: V) -> &mut TransitionTriggerBuilder where N: Into<String>, V: Serialize {
     self.fields.insert(name.into(), serde_json::to_value(value));
     self
   }
 
   /// updates resolution in transition
-  pub fn resolution<R>(&mut self, name: R) -> &mut TransitionWrapperBuilder where R: Into<String> {
+  pub fn resolution<R>(&mut self, name: R) -> &mut TransitionTriggerBuilder where R: Into<String> {
     self.field("resolution", Resolution { name: name.into() });
     self
   }
 
-  pub fn build(&self) -> TransitionWrapper {
-    TransitionWrapper {
+  pub fn build(&self) -> TransitionTrigger {
+    TransitionTrigger {
       transition: self.transition.clone(),
       fields: self.fields.clone()
     }
   }
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct Resolution {
   name: String
 }
