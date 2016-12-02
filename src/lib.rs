@@ -15,6 +15,8 @@ use std::io::Read;
 
 mod transitions;
 pub use transitions::*;
+mod issues;
+pub use issues::*;
 mod search;
 pub use search::*;
 mod builder;
@@ -64,9 +66,10 @@ impl<'a> Jira<'a> {
         Search::new(self)
     }
 
-    // https://docs.atlassian.com/jira/REST/latest/#api/2/issue
-    pub fn issue(&self, id: &str) -> Result<Issue> {
-        self.get(format!("/issue/{}", id).as_ref())
+
+    // return issues interface
+    pub fn issues(&self) -> Issues {
+        Issues::new(self)
     }
 
     fn post<D, S>(&self, endpoint: &str, body: S) -> Result<D>

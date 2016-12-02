@@ -12,6 +12,7 @@ fn main() {
         env::var("JIRA_HOST"), env::var("JIRA_USER"), env::var("JIRA_PASS"), env::var("JIRA_KEY")) {
         let client = Client::new();
         let jira = Jira::new(host, Credentials::Basic(user, pass), &client);
+        println!("{:#?}", jira.issues().get(key.clone()));
         let transitions = jira.transitions(key);
         for option in transitions.list() {
             println!("{:#?}", option);
