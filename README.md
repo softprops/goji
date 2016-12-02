@@ -6,6 +6,15 @@
 
 [rustdoc](https://softprops.github.io/goji)
 
+## install
+
+Add the following to your `Cargo.toml` file
+
+```toml
+[dependencies]
+goji = "0.1"
+```
+
 ## usage
 
 Basic usage requires a jira host, a hyper::Client instance and a flavor of jira::Credentials for authorization. For user authenticated requests you'll typically want to use jira::Credentials::Basic with your jira username and password.
