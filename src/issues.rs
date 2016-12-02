@@ -1,6 +1,6 @@
 use super::{Jira, Result, Issue};
 
-/// issue transition options
+/// issue options
 pub struct Issues<'a> {
     jira: &'a Jira<'a>,
 }
