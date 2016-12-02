@@ -28,6 +28,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 
 /// Types of authentication credentials
 pub enum Credentials {
+    /// username and password credentials
     Basic(String, String), // todo: OAuth
 }
 
@@ -58,6 +59,7 @@ impl<'a> Jira<'a> {
         Transitions::new(self, key)
     }
 
+    /// return search interface
     pub fn search(&self) -> Search {
         Search::new(self)
     }
