@@ -10,6 +10,7 @@ extern crate serde_json;
 use hyper::client::{Client, RequestBuilder};
 use hyper::method::Method;
 use hyper::header::{ContentType, Authorization, Basic};
+use hyper::status::StatusCode;
 use serde::{Deserialize, Serialize};
 use std::io::Read;
 
@@ -114,14 +115,68 @@ impl<'a> Jira<'a> {
         let mut body = String::new();
         try!(res.read_to_string(&mut body));
         debug!("status {:?} body '{:?}'", res.status, body);
-        if res.status.is_client_error() {
-            Err(Error::Fault {
-                code: res.status,
-                errors: try!(serde_json::from_str::<Errors>(&body)),
-            })
-        } else {
-            Ok(try!(serde_json::from_str::<D>(&body)))
+        match res.status {
+            StatusCode::Unauthorized => {
+                // returns unparsable html
+                Err(Error::Unauthorized)
+            },
+            client_err if client_err.is_client_error() => {
+                Err(Error::Fault {
+                    code: res.status,
+                    errors: try!(serde_json::from_str::<Errors>(&body)),
+                })
+            },
+            _ => {
+                Ok(try!(serde_json::from_str::<D>(&body)))
+            }
         }
+    }
+}
+
+pub struct SearchIter<'a> {
+    jira: &'a Jira<'a>,
+    jql: String,
+    results: SearchResults
+}
+
+impl<'a> SearchIter<'a> {
+    pub fn new<J>(jql: J, options: &SearchOptions, jira: &'a Jira<'a>) -> Result<SearchIter<'a>> where J: Into<String> {
+        let query = jql.into();
+        let results = try!(jira.search().list(query.clone(), options));
+        Ok(SearchIter {
+            jira: jira,
+            jql: query,
+            results: results
+        })
+    }
+
+    fn more(&self) -> bool {
+        (self.results.start_at + self.results.issues.len() as u64) < self.results.total
+    }
+}
+
+impl <'a> Iterator for SearchIter<'a> {
+    type Item = Issue;
+    fn next(&mut self) -> Option<Issue> {
+        self.results.issues.pop().or_else(||
+            if self.more() {
+                println!("fetchig more...");
+                match self.jira.search().list(
+                    self.jql.clone(),
+                    &SearchOptions::builder()
+                        .max_results(self.results.max_results)
+                        .start_at(self.results.start_at + self.results.max_results)
+                        .build()) {
+                            Ok(new_results) => {
+                                self.results = new_results;
+                                self.results.issues.pop()
+                            },
+                            _ => None
+                        }
+            } else {
+                None
+            }
+        )
     }
 }
 
