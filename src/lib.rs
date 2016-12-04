@@ -133,52 +133,5 @@ impl<'a> Jira<'a> {
     }
 }
 
-pub struct SearchIter<'a> {
-    jira: &'a Jira<'a>,
-    jql: String,
-    results: SearchResults
-}
-
-impl<'a> SearchIter<'a> {
-    pub fn new<J>(jql: J, options: &SearchOptions, jira: &'a Jira<'a>) -> Result<SearchIter<'a>> where J: Into<String> {
-        let query = jql.into();
-        let results = try!(jira.search().list(query.clone(), options));
-        Ok(SearchIter {
-            jira: jira,
-            jql: query,
-            results: results
-        })
-    }
-
-    fn more(&self) -> bool {
-        (self.results.start_at + self.results.issues.len() as u64) < self.results.total
-    }
-}
-
-impl <'a> Iterator for SearchIter<'a> {
-    type Item = Issue;
-    fn next(&mut self) -> Option<Issue> {
-        self.results.issues.pop().or_else(||
-            if self.more() {
-                println!("fetchig more...");
-                match self.jira.search().list(
-                    self.jql.clone(),
-                    &SearchOptions::builder()
-                        .max_results(self.results.max_results)
-                        .start_at(self.results.start_at + self.results.max_results)
-                        .build()) {
-                            Ok(new_results) => {
-                                self.results = new_results;
-                                self.results.issues.pop()
-                            },
-                            _ => None
-                        }
-            } else {
-                None
-            }
-        )
-    }
-}
-
 #[test]
 fn it_works() {}
