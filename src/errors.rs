@@ -16,6 +16,8 @@ pub enum Error {
     Serde(SerdeError),
     /// client request errors
     Fault { code: StatusCode, errors: Errors },
+    /// invalid credentials
+    Unauthorized
 }
 
 impl From<SerdeError> for Error {
