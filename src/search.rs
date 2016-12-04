@@ -1,4 +1,4 @@
-use super::{Jira, Result, SearchOptions, SearchResults};
+use super::{Jira, Result, SearchOptions, SearchResults, SearchIter};
 use url::form_urlencoded;
 
 // search interface
@@ -22,5 +22,9 @@ impl<'a> Search<'a> {
             .finish();
         path.push(query);
         self.jira.get::<SearchResults>(path.join("?").as_ref())
+    }
+
+    pub fn iter<J>(&self, jql: J, options: &SearchOptions) -> Result<SearchIter> where J: Into<String> {
+        SearchIter::new(jql, options, self.jira)
     }
 }
