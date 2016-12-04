@@ -19,7 +19,7 @@ pub use transitions::*;
 mod issues;
 pub use issues::*;
 mod search;
-pub use search::*;
+pub use search::Search;
 mod builder;
 pub use builder::*;
 mod errors;

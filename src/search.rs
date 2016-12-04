@@ -24,22 +24,22 @@ impl<'a> Search<'a> {
         self.jira.get::<SearchResults>(path.join("?").as_ref())
     }
 
-    pub fn iter<J>(&self, jql: J, options: &SearchOptions) -> Result<SearchIter> where J: Into<String> {
-        SearchIter::new(jql, options, self.jira)
+    pub fn iter<J>(&self, jql: J, options: &SearchOptions) -> Result<Iter> where J: Into<String> {
+        Iter::new(jql, options, self.jira)
     }
 }
 
-pub struct SearchIter<'a> {
+pub struct Iter<'a> {
     jira: &'a Jira<'a>,
     jql: String,
     results: SearchResults
 }
 
-impl<'a> SearchIter<'a> {
-    fn new<J>(jql: J, options: &SearchOptions, jira: &'a Jira<'a>) -> Result<SearchIter<'a>> where J: Into<String> {
+impl<'a> Iter<'a> {
+    fn new<J>(jql: J, options: &SearchOptions, jira: &'a Jira<'a>) -> Result<Iter<'a>> where J: Into<String> {
         let query = jql.into();
         let results = try!(jira.search().list(query.clone(), options));
-        Ok(SearchIter {
+        Ok(Iter {
             jira: jira,
             jql: query,
             results: results
@@ -51,7 +51,7 @@ impl<'a> SearchIter<'a> {
     }
 }
 
-impl <'a> Iterator for SearchIter<'a> {
+impl <'a> Iterator for Iter<'a> {
     type Item = Issue;
     fn next(&mut self) -> Option<Issue> {
         self.results.issues.pop().or_else(||
