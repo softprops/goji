@@ -12,16 +12,18 @@ fn main() {
         let query = env::args().nth(1).unwrap_or("assignee=doug".to_owned());
         let client = Client::new();
         let jira = Jira::new(host, Credentials::Basic(user, pass), &client);
-        let search = jira.search().list(query, &Default::default());
-        if let Ok(results) = search {
-            for issue in results.issues {
-                println!("{} {} ({}): reporter {} assignee {}",
-                         issue.key,
-                         issue.summary().unwrap_or("???".to_owned()),
-                         issue.status().map(|value| value.name).unwrap_or("???".to_owned()),
-                         issue.reporter().map(|value| value.display_name).unwrap_or("???".to_owned()),
-                         issue.assignee().map(|value| value.display_name).unwrap_or("???".to_owned()));
-            }
+        match jira.search().iter(query, &Default::default()) {
+            Ok(results) => {
+                for issue in results {
+                    println!("{} {} ({}): reporter {} assignee {}",
+                             issue.key,
+                             issue.summary().unwrap_or("???".to_owned()),
+                             issue.status().map(|value| value.name).unwrap_or("???".to_owned()),
+                             issue.reporter().map(|value| value.display_name).unwrap_or("???".to_owned()),
+                             issue.assignee().map(|value| value.display_name).unwrap_or("???".to_owned()));
+                }
+            },
+            Err(err) => panic!("{:#?}", err)
         }
     }
 }
