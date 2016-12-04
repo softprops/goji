@@ -17,7 +17,9 @@ goji = "0.1"
 
 ## usage
 
-Basic usage requires a jira host, a hyper::Client instance and a flavor of jira::Credentials for authorization. For user authenticated requests you'll typically want to use jira::Credentials::Basic with your jira username and password.
+Please browse the examples directory in this repo for some example applications.
+
+Basic usage requires a jira host, a `hyper::Client` instance and a flavor of `jira::Credentials` for authorization. For user authenticated requests you'll typically want to use `jira::Credentials::Basic` with your jira username and password.
 
 Current support api support is limited to search and issue transitioning.
 
@@ -26,7 +28,7 @@ extern crate goji;
 extern crate hyper;
 
 use hyper::Client;
-use goji::{Credentials, Jira, SearchOptions};
+use goji::{Credentials, Jira};
 
 fn main() {
     env_logger::init().unwrap();

@@ -3,7 +3,7 @@ extern crate goji;
 extern crate hyper;
 
 use hyper::Client;
-use goji::{Credentials, Jira, TransitionTrigger};
+use goji::{Credentials, Jira, TransitionTriggerOptions};
 use std::env;
 
 fn main() {
@@ -18,7 +18,7 @@ fn main() {
             println!("{:#?}", option);
         }
         if let Ok(transition_id) = env::var("JIRA_TRANSITION_ID") {
-            transitions.trigger(TransitionTrigger::new(transition_id)).unwrap()
+            transitions.trigger(TransitionTriggerOptions::new(transition_id)).unwrap()
         }
     }
 }

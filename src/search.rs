@@ -1,7 +1,7 @@
 use super::{Jira, Result, SearchOptions, SearchResults, Issue};
 use url::form_urlencoded;
 
-// search interface
+/// search interface
 pub struct Search<'a> {
     jira: &'a Jira<'a>,
 }
@@ -11,6 +11,7 @@ impl<'a> Search<'a> {
         Search { jira: jira }
     }
 
+    /// returns a single page of search results
     /// https://docs.atlassian.com/jira/REST/latest/#api/2/search
     pub fn list<J>(&self, jql: J, options: &SearchOptions) -> Result<SearchResults>
         where J: Into<String>
@@ -24,11 +25,14 @@ impl<'a> Search<'a> {
         self.jira.get::<SearchResults>(path.join("?").as_ref())
     }
 
+    /// runs a type why may be used to iterate over consecutive pages of results
+    /// https://docs.atlassian.com/jira/REST/latest/#api/2/search
     pub fn iter<J>(&self, jql: J, options: &SearchOptions) -> Result<Iter> where J: Into<String> {
         Iter::new(jql, options, self.jira)
     }
 }
 
+/// provides an iterator over multiple pages of search results
 pub struct Iter<'a> {
     jira: &'a Jira<'a>,
     jql: String,

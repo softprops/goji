@@ -237,15 +237,15 @@ pub struct TransitionOptions {
 }
 
 #[derive(Serialize, Debug)]
-pub struct TransitionTrigger {
+pub struct TransitionTriggerOptions {
     pub transition: Transition,
     pub fields: BTreeMap<String, ::serde_json::Value>
 }
 
-impl TransitionTrigger {
+impl TransitionTriggerOptions {
   /// creates a new instance
-  pub fn new<I>(id: I) -> TransitionTrigger where I: Into<String> {
-    TransitionTrigger {
+  pub fn new<I>(id: I) -> TransitionTriggerOptions where I: Into<String> {
+    TransitionTriggerOptions {
       transition: Transition {
         id: id.into()
       },
@@ -253,20 +253,20 @@ impl TransitionTrigger {
     }
   }
 
-  pub fn builder<I>(id: I) -> TransitionTriggerBuilder where I: Into<String> {
-    TransitionTriggerBuilder::new(id)
+  pub fn builder<I>(id: I) -> TransitionTriggerOptionsBuilder where I: Into<String> {
+    TransitionTriggerOptionsBuilder::new(id)
   }
 }
 
-pub struct TransitionTriggerBuilder {
+pub struct TransitionTriggerOptionsBuilder {
     pub transition: Transition,
     pub fields: BTreeMap<String, ::serde_json::Value>
 }
 
-impl TransitionTriggerBuilder {
+impl TransitionTriggerOptionsBuilder {
   /// creates a new instance
-  pub fn new<I>(id: I) -> TransitionTriggerBuilder where I: Into<String> {
-    TransitionTriggerBuilder {
+  pub fn new<I>(id: I) -> TransitionTriggerOptionsBuilder where I: Into<String> {
+    TransitionTriggerOptionsBuilder {
       transition: Transition {
         id: id.into()
       },
@@ -275,19 +275,19 @@ impl TransitionTriggerBuilder {
   }
 
   /// appends a field to update as part of transition
-  pub fn field<N, V>(&mut self, name: N, value: V) -> &mut TransitionTriggerBuilder where N: Into<String>, V: Serialize {
+  pub fn field<N, V>(&mut self, name: N, value: V) -> &mut TransitionTriggerOptionsBuilder where N: Into<String>, V: Serialize {
     self.fields.insert(name.into(), serde_json::to_value(value));
     self
   }
 
   /// updates resolution in transition
-  pub fn resolution<R>(&mut self, name: R) -> &mut TransitionTriggerBuilder where R: Into<String> {
+  pub fn resolution<R>(&mut self, name: R) -> &mut TransitionTriggerOptionsBuilder where R: Into<String> {
     self.field("resolution", Resolution { name: name.into() });
     self
   }
 
-  pub fn build(&self) -> TransitionTrigger {
-    TransitionTrigger {
+  pub fn build(&self) -> TransitionTriggerOptions {
+    TransitionTriggerOptions {
       transition: self.transition.clone(),
       fields: self.fields.clone()
     }

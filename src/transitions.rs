@@ -1,7 +1,7 @@
 
-use super::{Error, Jira, Result, TransitionOptions, TransitionOption, TransitionTrigger};
+use super::{Error, Jira, Result, TransitionOptions, TransitionOption, TransitionTriggerOptions};
 
-/// issue transition options
+/// issue transition interface
 pub struct Transitions<'a> {
     jira: &'a Jira<'a>,
     key: String,
@@ -27,9 +27,9 @@ impl<'a> Transitions<'a> {
 
     /// trigger a issue transition
     /// to transition with a resolution use TransitionTrigger::builder(id).resolution(name)
-    pub fn trigger(&self, trans: TransitionTrigger) -> Result<()> {
+    pub fn trigger(&self, trans: TransitionTriggerOptions) -> Result<()> {
         self.jira
-            .post::<(), TransitionTrigger>(&format!("/issue/{}/transitions", self.key), trans)
+            .post::<(), TransitionTriggerOptions>(&format!("/issue/{}/transitions", self.key), trans)
             .or_else(|e| match e {
                 Error::Serde(_) => Ok(()),
                 e => Err(e),
