@@ -50,7 +50,7 @@ impl SearchOptionsBuilder {
         self
     }
 
-    pub fn max(&mut self, m: u64) -> &mut SearchOptionsBuilder {
+    pub fn max_results(&mut self, m: u64) -> &mut SearchOptionsBuilder {
         self.params.insert("maxResults", m.to_string());
         self
     }
