@@ -13,7 +13,7 @@ pub struct Issue {
     #[serde(rename="self")]
     pub self_link: String,
     pub key: String,
-    pub id: u32,
+    pub id: u64,
 //    pub expand: String,
     pub fields: BTreeMap<String, ::serde_json::Value>
 }
@@ -208,11 +208,11 @@ pub struct IssueType {
 
 #[derive(Deserialize, Debug)]
 pub struct SearchResults {
-    pub total: u32,
+    pub total: u64,
     #[serde(rename="maxResults")]
-    pub max_results: u32,
+    pub max_results: u64,
     #[serde(rename="startAt")]
-    pub start_at: u32,
+    pub start_at: u64,
     pub expand: String,
     pub issues: Vec<Issue>
 }
