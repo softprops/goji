@@ -36,7 +36,7 @@ pub struct SearchIter<'a> {
 }
 
 impl<'a> SearchIter<'a> {
-    pub fn new<J>(jql: J, options: &SearchOptions, jira: &'a Jira<'a>) -> Result<SearchIter<'a>> where J: Into<String> {
+    fn new<J>(jql: J, options: &SearchOptions, jira: &'a Jira<'a>) -> Result<SearchIter<'a>> where J: Into<String> {
         let query = jql.into();
         let results = try!(jira.search().list(query.clone(), options));
         Ok(SearchIter {
