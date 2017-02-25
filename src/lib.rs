@@ -5,6 +5,8 @@ extern crate log;
 extern crate hyper;
 extern crate url;
 extern crate serde;
+#[macro_use]
+extern crate serde_derive;
 extern crate serde_json;
 
 use hyper::client::{Client, RequestBuilder};
