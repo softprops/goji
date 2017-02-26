@@ -26,6 +26,7 @@ Current support api support is limited to search and issue transitioning.
 ```rust
 extern crate goji;
 extern crate hyper;
+extern crate hyper_openssl;
 
 use hyper::Client;
 use goji::{Credentials, Jira};
@@ -34,8 +35,13 @@ fn main() {
     env_logger::init().unwrap();
     if let (Ok(host), Ok(user), Ok(pass)) = (env::var("JIRA_HOST"), env::var("JIRA_USER"), env::var("JIRA_PASS")) {
         let query = env::args().nth(1).unwrap();
-        let client = Client::new();
+
+        let ssl = OpensslClient::new().unwrap();
+        let connector = HttpsConnector::new(ssl);
+        let client = Client::with_connector(connector);
+
         let jira = Jira::new(host, Credentials::Basic(user, pass), &client);
+
         let results = jira.search().list(query, &Default::default());
           for issue in results.unwrap().issues {
             println!("{:#?}", issue)
