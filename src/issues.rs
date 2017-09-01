@@ -1,17 +1,19 @@
 use super::{Jira, Result, Issue};
 
 /// issue options
-pub struct Issues<'a> {
-    jira: &'a Jira<'a>,
+#[derive(Debug)]
+pub struct Issues {
+    jira: Jira,
 }
 
-impl<'a> Issues<'a> {
-    pub fn new(jira: &'a Jira<'a>) -> Issues {
-        Issues { jira: jira }
+impl Issues {
+    pub fn new(jira: &Jira) -> Issues {
+        Issues { jira: jira.clone() }
     }
 
     pub fn get<I>(&self, id: I) -> Result<Issue>
-        where I: Into<String>
+    where
+        I: Into<String>,
     {
         self.jira.get(&format!("/issue/{}", id.into()))
     }
