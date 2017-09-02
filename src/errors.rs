@@ -1,6 +1,6 @@
 use std::io::Error as IoError;
-use hyper::Error as HttpError;
-use hyper::status::StatusCode;
+use reqwest::Error as HttpError;
+use reqwest::StatusCode;
 use serde_json::error::Error as SerdeError;
 use super::Errors;
 
@@ -17,7 +17,7 @@ pub enum Error {
     /// client request errors
     Fault { code: StatusCode, errors: Errors },
     /// invalid credentials
-    Unauthorized
+    Unauthorized,
 }
 
 impl From<SerdeError> for Error {
