@@ -18,7 +18,7 @@ pub struct Issue {
     #[serde(rename = "self")]
     pub self_link: String,
     pub key: String,
-    pub id: u64,
+    pub id: String,
     //    pub expand: String,
     pub fields: BTreeMap<String, ::serde_json::Value>,
 }
