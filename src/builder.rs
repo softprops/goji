@@ -2,7 +2,7 @@ use url::form_urlencoded;
 use std::collections::HashMap;
 
 /// options availble for search
-#[derive(Default)]
+#[derive(Default, Clone, Debug)]
 pub struct SearchOptions {
     params: HashMap<&'static str, String>,
 }
@@ -23,11 +23,15 @@ impl SearchOptions {
                 .finish())
         }
     }
+
+    pub fn as_builder(&self) -> SearchOptionsBuilder {
+        SearchOptionsBuilder::copy_from(self)
+    }
 }
 
 /// a builder interface for search option
 /// Typically this is initialized with SearchOptions::builder()
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct SearchOptionsBuilder {
     params: HashMap<&'static str, String>,
 }
@@ -35,6 +39,10 @@ pub struct SearchOptionsBuilder {
 impl SearchOptionsBuilder {
     pub fn new() -> SearchOptionsBuilder {
         SearchOptionsBuilder { ..Default::default() }
+    }
+
+    fn copy_from(search_options: &SearchOptions) -> SearchOptionsBuilder {
+        SearchOptionsBuilder { params: search_options.params.clone() }
     }
 
     pub fn fields<F>(&mut self, fs: Vec<F>) -> &mut SearchOptionsBuilder
