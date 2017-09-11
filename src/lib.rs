@@ -61,6 +61,18 @@ impl Jira {
         })
     }
 
+    /// creates a new instance of a jira client using a specified reqwest client
+    pub fn from_client<H>(host: H, credentials: Credentials, client: Client) -> Result<Jira>
+    where
+        H: Into<String>,
+    {
+        Ok(Jira {
+            host: host.into(),
+            credentials,
+            client,
+        })
+    }
+
     /// return transitions interface
     pub fn transitions<K>(&self, key: K) -> Transitions
     where
