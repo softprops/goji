@@ -18,18 +18,16 @@ pub struct Issue {
     #[serde(rename = "self")]
     pub self_link: String,
     pub key: String,
-    pub id: u64,
-    //    pub expand: String,
+    pub id: String,
     pub fields: BTreeMap<String, ::serde_json::Value>,
+    pub changelog: Option<Changelog>,
 }
 
 impl Issue {
     /// resolves a typed field from an issues lists of arbitrary fields
-    pub fn field<'a, F>(&self, name: &str) -> Option<Result<F>>
+    pub fn field<F>(&self, name: &str) -> Option<Result<F>>
     where
         for<'de> F: Deserialize<'de>,
-    //where
-    //    F: Deserialize<'a>,
     {
         self.fields.get(name).map(|value| {
             let decoded = try!(serde_json::value::from_value::<F>(value.clone()));
@@ -139,6 +137,28 @@ impl Issue {
     }
 }
 
+#[derive(Deserialize, Debug)]
+pub struct Changelog {
+    pub histories: Vec<History>,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct History {
+    pub author: User,
+    pub created: String,
+    pub items: Vec<HistoryItem>
+}
+
+#[derive(Deserialize, Debug)]
+pub struct HistoryItem {
+    pub field: String,
+    pub from: Option<String>,
+    #[serde(rename = "fromString")]
+    pub from_string: Option<String>,
+    pub to: Option<String>,
+    #[serde(rename = "toString")]
+    pub to_string: Option<String>,
+}
 
 #[derive(Deserialize, Debug)]
 pub struct Project {
@@ -192,12 +212,12 @@ pub struct User {
     pub display_name: String,
     #[serde(rename = "emailAddress")]
     pub email_address: String,
-    pub key: String,
+    pub key: Option<String>,
     pub name: String,
     #[serde(rename = "self")]
     pub self_link: String,
     #[serde(rename = "timeZone")]
-    pub timezone: String,
+    pub timezone: Option<String>,
 }
 
 #[derive(Deserialize, Debug)]
