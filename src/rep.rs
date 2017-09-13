@@ -18,7 +18,7 @@ pub struct Issue {
     #[serde(rename = "self")]
     pub self_link: String,
     pub key: String,
-    pub id: u64,
+    pub id: String,
     //    pub expand: String,
     pub fields: BTreeMap<String, ::serde_json::Value>,
 }
@@ -28,8 +28,6 @@ impl Issue {
     pub fn field<'a, F>(&self, name: &str) -> Option<Result<F>>
     where
         for<'de> F: Deserialize<'de>,
-    //where
-    //    F: Deserialize<'a>,
     {
         self.fields.get(name).map(|value| {
             let decoded = try!(serde_json::value::from_value::<F>(value.clone()));

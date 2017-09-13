@@ -29,6 +29,7 @@ mod errors;
 pub use errors::*;
 mod rep;
 pub use rep::*;
+pub mod resolution;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
