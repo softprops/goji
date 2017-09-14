@@ -1,4 +1,6 @@
 use std::io::Error as IoError;
+use std::error::Error as StdError;
+use std::fmt;
 use reqwest::Error as HttpError;
 use reqwest::StatusCode;
 use serde_json::error::Error as SerdeError;
@@ -37,3 +39,31 @@ impl From<IoError> for Error {
         Error::IO(error)
     }
 }
+
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        f.write_str(self.description())
+    }
+}
+
+impl StdError for Error{
+    fn description(&self) -> &str {
+        match *self {
+            Error::Http(ref e) => e.description(),
+            Error::IO(ref e) => e.description(),
+            Error::Serde(ref e) => e.description(),
+            Error::Fault{ref code, ref errors} => "",
+            Error::Unauthorized => "Unauthorized",
+        }
+    }
+    fn cause(&self) -> Option<&StdError> {
+        match *self {
+            Error::Http(ref e) => e.cause(),
+            Error::IO(ref e) => e.cause(),
+            Error::Serde(ref e) => e.cause(),
+            Error::Fault{ref code, ref errors} => None,
+            Error::Unauthorized => None,
+        }
+    }
+}
+

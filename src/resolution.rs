@@ -1,7 +1,6 @@
 use super::{Jira, Result};
 
 use std::collections::BTreeMap;
-use serde::Deserialize;
 
 #[derive(Debug)]
 pub struct Resolution {
@@ -15,7 +14,8 @@ pub struct Resolved {
     #[serde(rename = "type")]
     pub resolution_type: String,
     pub properties: BTreeMap<String, ::serde_json::Value>,
-    pub additionalProperties: bool,
+    #[serde(rename = "additionalProperties")]
+    pub additional_properties: bool,
 }
 
 impl Resolution {
