@@ -37,6 +37,7 @@ pub struct Fields {
     pub assignee: Assignee,
     pub components: Vec<Component>,
     pub description: String,
+    pub environment: String,
     pub issuetype: IssueType,
     pub priority: Priority,
     pub project: Project,
