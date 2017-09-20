@@ -24,12 +24,17 @@ Basic usage requires a jira host, a `hyper::Client` instance and a flavor of `ji
 Current support api support is limited to search and issue transitioning.
 
 ```rust
+extern crate env_logger;
 extern crate goji;
 extern crate hyper;
 extern crate hyper_openssl;
 
 use hyper::Client;
+use hyper::net::HttpsConnector;
+use hyper_openssl::OpensslClient;
 use goji::{Credentials, Jira};
+
+use std::env;
 
 fn main() {
     env_logger::init().unwrap();

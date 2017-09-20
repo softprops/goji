@@ -29,7 +29,7 @@ impl Search {
 
     /// runs a type why may be used to iterate over consecutive pages of results
     /// https://docs.atlassian.com/jira/REST/latest/#api/2/search
-    pub fn iter<J>(&self, jql: J, options: &SearchOptions) -> Result<Iter>
+    pub fn iter<'a, J>(&self, jql: J, options: &'a SearchOptions) -> Result<Iter<'a>>
     where
         J: Into<String>,
     {
@@ -39,23 +39,25 @@ impl Search {
 
 /// provides an iterator over multiple pages of search results
 #[derive(Debug)]
-pub struct Iter {
+pub struct Iter<'a> {
     jira: Jira,
     jql: String,
     results: SearchResults,
+    search_options: &'a SearchOptions
 }
 
-impl Iter {
-    fn new<J>(jql: J, options: &SearchOptions, jira: &Jira) -> Result<Iter>
+impl<'a> Iter<'a> {
+    fn new<J>(jql: J, options: &'a SearchOptions, jira: &Jira) -> Result<Self>
     where
         J: Into<String>,
     {
         let query = jql.into();
-        let results = try!(jira.search().list(query.clone(), options));
+        let results = jira.search().list(query.clone(), options)?;
         Ok(Iter {
             jira: jira.clone(),
             jql: query,
-            results: results,
+            results,
+            search_options: options
         })
     }
 
@@ -64,13 +66,13 @@ impl Iter {
     }
 }
 
-impl Iterator for Iter {
+impl<'a> Iterator for Iter<'a> {
     type Item = Issue;
     fn next(&mut self) -> Option<Issue> {
         self.results.issues.pop().or_else(|| if self.more() {
             match self.jira.search().list(
                 self.jql.clone(),
-                &SearchOptions::builder()
+                &self.search_options.as_builder()
                     .max_results(self.results.max_results)
                     .start_at(self.results.start_at + self.results.max_results)
                     .build(),

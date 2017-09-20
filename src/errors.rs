@@ -40,30 +40,42 @@ impl From<IoError> for Error {
     }
 }
 
-impl fmt::Display for Error {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        f.write_str(self.description())
+impl ::std::fmt::Display for Error {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        use Error::*;
+        match self {
+            &Http(ref e) => writeln!(f, "Http Error: {}", e),
+            &IO(ref e) => writeln!(f, "IO Error: {}", e),
+            &Serde(ref e) => writeln!(f, "Serialization Error: {}", e),
+            &Fault {
+                ref code,
+                ref errors,
+            } => writeln!(f, "Jira Client Error ({}):\n{:#?}", code, errors),
+            &Unauthorized => writeln!(f, "Could not connect to Jira: Unauthorized!"),
+        }
     }
 }
 
-impl StdError for Error{
+impl ::std::error::Error for Error {
     fn description(&self) -> &str {
-        match *self {
-            Error::Http(ref e) => e.description(),
-            Error::IO(ref e) => e.description(),
-            Error::Serde(ref e) => e.description(),
-            Error::Fault{ref code, ref errors} => "",
-            Error::Unauthorized => "Unauthorized",
+        use Error::*;
+        match self {
+            &Http(ref e) => e.description(),
+            &IO(ref e) => e.description(),
+            &Serde(ref e) => e.description(),
+            &Fault { .. } => "Jira client error",
+            &Unauthorized => "Unauthorized",
         }
     }
-    fn cause(&self) -> Option<&StdError> {
-        match *self {
-            Error::Http(ref e) => e.cause(),
-            Error::IO(ref e) => e.cause(),
-            Error::Serde(ref e) => e.cause(),
-            Error::Fault{ref code, ref errors} => None,
-            Error::Unauthorized => None,
+
+    fn cause(&self) -> Option<&::std::error::Error> {
+        use Error::*;
+        match self {
+            &Http(ref e) => Some(e),
+            &IO(ref e) => Some(e),
+            &Serde(ref e) => Some(e),
+            &Fault { .. } => None,
+            &Unauthorized => None,
         }
     }
 }
-
