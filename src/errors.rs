@@ -1,4 +1,6 @@
 use std::io::Error as IoError;
+use std::error::Error as StdError;
+use std::fmt;
 use reqwest::Error as HttpError;
 use reqwest::StatusCode;
 use serde_json::error::Error as SerdeError;
@@ -45,7 +47,10 @@ impl ::std::fmt::Display for Error {
             &Http(ref e) => writeln!(f, "Http Error: {}", e),
             &IO(ref e) => writeln!(f, "IO Error: {}", e),
             &Serde(ref e) => writeln!(f, "Serialization Error: {}", e),
-            &Fault { ref code, ref errors } => writeln!(f, "Jira Client Error ({}):\n{:#?}", code, errors),
+            &Fault {
+                ref code,
+                ref errors,
+            } => writeln!(f, "Jira Client Error ({}):\n{:#?}", code, errors),
             &Unauthorized => writeln!(f, "Could not connect to Jira: Unauthorized!"),
         }
     }

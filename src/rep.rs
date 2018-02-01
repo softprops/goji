@@ -146,7 +146,7 @@ pub struct Changelog {
 pub struct History {
     pub author: User,
     pub created: String,
-    pub items: Vec<HistoryItem>
+    pub items: Vec<HistoryItem>,
 }
 
 #[derive(Deserialize, Debug)]

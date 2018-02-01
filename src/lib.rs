@@ -19,7 +19,7 @@ use serde::de::DeserializeOwned;
 
 mod transitions;
 pub use transitions::*;
-mod issues;
+pub mod issues;
 pub use issues::*;
 mod search;
 pub use search::Search;
@@ -29,6 +29,7 @@ mod errors;
 pub use errors::*;
 mod rep;
 pub use rep::*;
+pub mod resolution;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
@@ -97,6 +98,7 @@ impl Jira {
         S: Serialize,
     {
         let data = try!(serde_json::to_string::<S>(&body));
+        debug!("Json request: {}", data);
         self.request::<D>(Method::Post, endpoint, Some(data.into_bytes()))
     }
 
