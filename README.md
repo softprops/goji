@@ -12,7 +12,7 @@ Add the following to your `Cargo.toml` file
 
 ```toml
 [dependencies]
-goji = "0.1"
+goji = "0.2"
 ```
 
 ## usage
