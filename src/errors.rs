@@ -1,6 +1,4 @@
 use std::io::Error as IoError;
-use std::error::Error as StdError;
-use std::fmt;
 use reqwest::Error as HttpError;
 use reqwest::StatusCode;
 use serde_json::error::Error as SerdeError;
