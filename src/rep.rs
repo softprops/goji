@@ -135,6 +135,27 @@ impl Issue {
             |value| value.ok(),
         )
     }
+
+    pub fn attachment(&self) -> Vec<Attachment> {
+        self.field::<Vec<Attachment>>("attachment")
+            .and_then(|value| value.ok())
+            .unwrap_or(vec![])
+    }
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Attachment {
+  pub id: String,
+  #[serde(rename = "self")]
+  pub self_link: String,
+  pub filename: String,
+  pub author: User,
+  pub created: String,
+  pub size: u64,
+  #[serde(rename = "mimeType")]
+  pub mime_type: String,
+  pub content: String,
+  pub thumbnail: Option<String>,
 }
 
 #[derive(Deserialize, Debug)]
