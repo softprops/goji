@@ -141,6 +141,13 @@ impl Issue {
             .and_then(|value| value.ok())
             .unwrap_or(vec![])
     }
+
+    pub fn comment(&self) -> Vec<Comment> {
+        self.field::<Comments>("comment")
+            .and_then(|value| value.ok())
+            .map(|value| value.comments)
+            .unwrap_or(vec![])
+    }
 }
 
 #[derive(Deserialize, Debug)]
@@ -156,6 +163,32 @@ pub struct Attachment {
   pub mime_type: String,
   pub content: String,
   pub thumbnail: Option<String>,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Comments {
+    pub comments: Vec<Comment>,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Comment {
+    pub id: Option<String>,
+    #[serde(rename = "self")]
+    pub self_link: String,
+    pub author: Option<User>,
+    #[serde(rename = "updateAuthor")]
+    pub update_author: Option<User>,
+    pub created: String,
+    pub updated: String,
+    pub body: String,
+    pub visibility: Option<Visibility>,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Visibility {
+    #[serde(rename = "type")]
+    pub visibility_type: String,
+    pub value: String,
 }
 
 #[derive(Deserialize, Debug)]
