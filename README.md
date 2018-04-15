@@ -2,10 +2,6 @@
 
 > a rust interface for jira
 
-## docs
-
-[rustdoc](https://softprops.github.io/goji)
-
 ## install
 
 Add the following to your `Cargo.toml` file
