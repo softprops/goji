@@ -1,3 +1,11 @@
+# 0.2.1
+
+* updated issue and attachment interfaces
+
+# 0.2.0
+
+* replace hyper client with reqwest
+
 # 0.1.1
 
 * expanded search interface with and `iter` method that implements an `Iterator` over `Issues`
