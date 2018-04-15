@@ -8,6 +8,11 @@ homepage = "https://github.com/softprops/goji"
 repository = "https://github.com/softprops/goji"
 keywords = ["hyper", "jira"]
 license = "MIT"
+readme = "README.md"
+
+[badges]
+travis-ci = { repository = "softprops/goji" }
+maintenance = { status = "actively-developed" }
 
 [dev-dependencies]
 env_logger = "0.4"
