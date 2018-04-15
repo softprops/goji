@@ -1,4 +1,4 @@
-# goji [![Build Status](https://travis-ci.org/softprops/goji.svg?branch=master)](https://travis-ci.org/softprops/goji)
+# goji [![Build Status](https://travis-ci.org/softprops/goji.svg?branch=master)](https://travis-ci.org/softprops/goji) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE) [![crates.io](http://meritbadge.herokuapp.com/goji)](https://crates.io/crates/goji) [![Released API docs](https://docs.rs/goji/badge.svg)](http://docs.rs/goji) [![Master API docs](https://img.shields.io/badge/docs-master-green.svg)](https://softprops.github.io/goji)
 
 > a rust interface for jira
 
