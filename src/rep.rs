@@ -306,7 +306,7 @@ pub struct SearchResults {
     pub max_results: u64,
     #[serde(rename = "startAt")]
     pub start_at: u64,
-    pub expand: String,
+    pub expand: Option<String>,
     pub issues: Vec<Issue>,
 }
 
