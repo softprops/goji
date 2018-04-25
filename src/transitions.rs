@@ -1,5 +1,4 @@
-
-use super::{Error, Jira, Result, TransitionOptions, TransitionOption, TransitionTriggerOptions};
+use super::{Error, Jira, Result, TransitionOption, TransitionOptions, TransitionTriggerOptions};
 
 /// issue transition interface
 #[derive(Debug)]

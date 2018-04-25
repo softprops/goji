@@ -70,9 +70,8 @@ impl Issue {
 
     /// description of the issue
     pub fn description(&self) -> Option<String> {
-        self.string_field("description").and_then(
-            |value| value.ok(),
-        )
+        self.string_field("description")
+            .and_then(|value| value.ok())
     }
 
     /// updated timestamp
@@ -86,16 +85,14 @@ impl Issue {
     }
 
     pub fn resolution_date(&self) -> Option<String> {
-        self.string_field("resolution_date").and_then(
-            |value| value.ok(),
-        )
+        self.string_field("resolution_date")
+            .and_then(|value| value.ok())
     }
 
     /// an issue type
     pub fn issue_type(&self) -> Option<IssueType> {
-        self.field::<IssueType>("issuetype").and_then(
-            |value| value.ok(),
-        )
+        self.field::<IssueType>("issuetype")
+            .and_then(|value| value.ok())
     }
 
     /// labels associated with the issue
@@ -114,9 +111,8 @@ impl Issue {
 
     /// priority of the issue
     pub fn priority(&self) -> Option<Priority> {
-        self.field::<Priority>("priority").and_then(
-            |value| value.ok(),
-        )
+        self.field::<Priority>("priority")
+            .and_then(|value| value.ok())
     }
 
     /// links to other issues
@@ -125,15 +121,13 @@ impl Issue {
     }
 
     pub fn project(&self) -> Option<Project> {
-        self.field::<Project>("project").and_then(
-            |value| value.ok(),
-        )
+        self.field::<Project>("project")
+            .and_then(|value| value.ok())
     }
 
     pub fn resolution(&self) -> Option<Resolution> {
-        self.field::<Resolution>("resolution").and_then(
-            |value| value.ok(),
-        )
+        self.field::<Resolution>("resolution")
+            .and_then(|value| value.ok())
     }
 
     pub fn attachment(&self) -> Vec<Attachment> {
@@ -152,17 +146,17 @@ impl Issue {
 
 #[derive(Deserialize, Debug)]
 pub struct Attachment {
-  pub id: String,
-  #[serde(rename = "self")]
-  pub self_link: String,
-  pub filename: String,
-  pub author: User,
-  pub created: String,
-  pub size: u64,
-  #[serde(rename = "mimeType")]
-  pub mime_type: String,
-  pub content: String,
-  pub thumbnail: Option<String>,
+    pub id: String,
+    #[serde(rename = "self")]
+    pub self_link: String,
+    pub filename: String,
+    pub author: User,
+    pub created: String,
+    pub size: u64,
+    #[serde(rename = "mimeType")]
+    pub mime_type: String,
+    pub content: String,
+    pub thumbnail: Option<String>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -220,7 +214,6 @@ pub struct Project {
     pub key: String,
     pub name: String,
 }
-
 
 /// represents link relationship between issues
 #[derive(Deserialize, Debug)]
