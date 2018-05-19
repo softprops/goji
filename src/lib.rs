@@ -118,12 +118,10 @@ impl Jira {
 
         let mut req = self.client.request(method, &url)?;
         let builder = match self.credentials {
-            Credentials::Basic(ref user, ref pass) => {
-                req.header(Authorization(Basic {
-                    username: user.to_owned(),
-                    password: Some(pass.to_owned()),
-                })).header(ContentType::json())
-            }
+            Credentials::Basic(ref user, ref pass) => req.header(Authorization(Basic {
+                username: user.to_owned(),
+                password: Some(pass.to_owned()),
+            })).header(ContentType::json()),
         };
 
         let mut res = try!(match body {
@@ -139,12 +137,10 @@ impl Jira {
                 // returns unparsable html
                 Err(Error::Unauthorized)
             }
-            client_err if client_err.is_client_error() => {
-                Err(Error::Fault {
-                    code: res.status(),
-                    errors: try!(serde_json::from_str::<Errors>(&body)),
-                })
-            }
+            client_err if client_err.is_client_error() => Err(Error::Fault {
+                code: res.status(),
+                errors: try!(serde_json::from_str::<Errors>(&body)),
+            }),
             _ => Ok(try!(serde_json::from_str::<D>(&body))),
         }
     }

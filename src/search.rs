@@ -1,4 +1,4 @@
-use super::{Jira, Result, SearchOptions, SearchResults, Issue};
+use super::{Issue, Jira, Result, SearchOptions, SearchResults};
 use url::form_urlencoded;
 
 /// search interface
@@ -43,7 +43,7 @@ pub struct Iter<'a> {
     jira: Jira,
     jql: String,
     results: SearchResults,
-    search_options: &'a SearchOptions
+    search_options: &'a SearchOptions,
 }
 
 impl<'a> Iter<'a> {
@@ -57,7 +57,7 @@ impl<'a> Iter<'a> {
             jira: jira.clone(),
             jql: query,
             results,
-            search_options: options
+            search_options: options,
         })
     }
 
@@ -69,22 +69,25 @@ impl<'a> Iter<'a> {
 impl<'a> Iterator for Iter<'a> {
     type Item = Issue;
     fn next(&mut self) -> Option<Issue> {
-        self.results.issues.pop().or_else(|| if self.more() {
-            match self.jira.search().list(
-                self.jql.clone(),
-                &self.search_options.as_builder()
-                    .max_results(self.results.max_results)
-                    .start_at(self.results.start_at + self.results.max_results)
-                    .build(),
-            ) {
-                Ok(new_results) => {
-                    self.results = new_results;
-                    self.results.issues.pop()
+        self.results.issues.pop().or_else(|| {
+            if self.more() {
+                match self.jira.search().list(
+                    self.jql.clone(),
+                    &self.search_options
+                        .as_builder()
+                        .max_results(self.results.max_results)
+                        .start_at(self.results.start_at + self.results.max_results)
+                        .build(),
+                ) {
+                    Ok(new_results) => {
+                        self.results = new_results;
+                        self.results.issues.pop()
+                    }
+                    _ => None,
                 }
-                _ => None,
+            } else {
+                None
             }
-        } else {
-            None
         })
     }
 }
