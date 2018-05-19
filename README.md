@@ -27,7 +27,7 @@ use goji::{Credentials, Jira};
 use std::env;
 
 fn main() {
-    env_logger::init().unwrap();
+    env_logger::init()
     if let (Ok(host), Ok(user), Ok(pass)) =
         (
             env::var("JIRA_HOST"),
@@ -42,13 +42,12 @@ fn main() {
         match jira.search().iter(query, &Default::default()) {
             Ok(results) => {
                 for issue in results {
-                    println!("{:#?}" issue);
+                    println!("{:#?}", issue);
                 }
             }
             Err(err) => panic!("{:#?}", err),
         }
     }
-}
 }
 ```
 
