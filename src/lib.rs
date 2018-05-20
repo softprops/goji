@@ -113,7 +113,7 @@ impl Jira {
     where
         D: DeserializeOwned,
     {
-        let url = format!("{}/rest/api/latest{}", self.host, endpoint);
+        let url = format!("{}/rest/agile/latest{}", self.host, endpoint);
         debug!("url -> {:?}", url);
 
         let mut req = self.client.request(method, &url)?;
