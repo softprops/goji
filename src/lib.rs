@@ -57,8 +57,8 @@ impl Jira {
     {
         Ok(Jira {
             host: host.into(),
-            credentials: credentials,
             client: Client::new()?,
+            credentials,
         })
     }
 
