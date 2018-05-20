@@ -99,14 +99,14 @@ impl Issue {
     pub fn labels(&self) -> Vec<String> {
         self.field::<Vec<String>>("labels")
             .and_then(|value| value.ok())
-            .unwrap_or(vec![])
+            .unwrap_or_default()
     }
 
     /// list of versions associated with the issue
     pub fn fix_versions(&self) -> Vec<Version> {
         self.field::<Vec<Version>>("fixVersions")
             .and_then(|value| value.ok())
-            .unwrap_or(vec![])
+            .unwrap_or_default()
     }
 
     /// priority of the issue
@@ -133,14 +133,14 @@ impl Issue {
     pub fn attachment(&self) -> Vec<Attachment> {
         self.field::<Vec<Attachment>>("attachment")
             .and_then(|value| value.ok())
-            .unwrap_or(vec![])
+            .unwrap_or_default()
     }
 
     pub fn comment(&self) -> Vec<Comment> {
         self.field::<Comments>("comment")
             .and_then(|value| value.ok())
             .map(|value| value.comments)
-            .unwrap_or(vec![])
+            .unwrap_or_default()
     }
 }
 
