@@ -30,6 +30,8 @@ pub use errors::*;
 mod rep;
 pub use rep::*;
 pub mod resolution;
+pub mod boards;
+pub use boards::*;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
@@ -92,6 +94,11 @@ impl Jira {
         Issues::new(self)
     }
 
+    // return boards interface
+    pub fn boards(&self) -> Boards {
+        Boards::new(self)
+    }
+
     fn post<D, S>(&self, endpoint: &str, body: S) -> Result<D>
     where
         D: DeserializeOwned,
@@ -113,7 +120,7 @@ impl Jira {
     where
         D: DeserializeOwned,
     {
-        let url = format!("{}/rest/api/latest{}", self.host, endpoint);
+        let url = format!("{}/rest/agile/latest{}", self.host, endpoint);
         debug!("url -> {:?}", url);
 
         let mut req = self.client.request(method, &url)?;
@@ -132,6 +139,7 @@ impl Jira {
         let mut body = String::new();
         try!(res.read_to_string(&mut body));
         debug!("status {:?} body '{:?}'", res.status(), body);
+        println!("status {:?} body '{:?}'", res.status(), body);
         match res.status() {
             StatusCode::Unauthorized => {
                 // returns unparsable html

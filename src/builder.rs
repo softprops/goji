@@ -80,6 +80,21 @@ impl SearchOptionsBuilder {
         self
     }
 
+    pub fn type_name(&mut self, t: &str) -> &mut SearchOptionsBuilder {
+        self.params.insert("type", t.to_string());
+        self
+    }
+
+    pub fn name(&mut self, n: &str) -> &mut SearchOptionsBuilder {
+        self.params.insert("name", n.to_string());
+        self
+    }
+
+    pub fn project_key_or_id(&mut self, id: &str) -> &mut SearchOptionsBuilder {
+        self.params.insert("projectKeyOrId", id.to_string());
+        self
+    }
+
     pub fn expand<E>(&mut self, ex: Vec<E>) -> &mut SearchOptionsBuilder
     where
         E: Into<String>,
