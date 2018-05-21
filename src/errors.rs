@@ -41,15 +41,15 @@ impl From<IoError> for Error {
 impl ::std::fmt::Display for Error {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         use Error::*;
-        match self {
-            &Http(ref e) => writeln!(f, "Http Error: {}", e),
-            &IO(ref e) => writeln!(f, "IO Error: {}", e),
-            &Serde(ref e) => writeln!(f, "Serialization Error: {}", e),
-            &Fault {
+        match *self {
+            Http(ref e) => writeln!(f, "Http Error: {}", e),
+            IO(ref e) => writeln!(f, "IO Error: {}", e),
+            Serde(ref e) => writeln!(f, "Serialization Error: {}", e),
+            Fault {
                 ref code,
                 ref errors,
             } => writeln!(f, "Jira Client Error ({}):\n{:#?}", code, errors),
-            &Unauthorized => writeln!(f, "Could not connect to Jira: Unauthorized!"),
+            Unauthorized => writeln!(f, "Could not connect to Jira: Unauthorized!"),
         }
     }
 }
@@ -57,23 +57,23 @@ impl ::std::fmt::Display for Error {
 impl ::std::error::Error for Error {
     fn description(&self) -> &str {
         use Error::*;
-        match self {
-            &Http(ref e) => e.description(),
-            &IO(ref e) => e.description(),
-            &Serde(ref e) => e.description(),
-            &Fault { .. } => "Jira client error",
-            &Unauthorized => "Unauthorized",
+        match *self {
+            Http(ref e) => e.description(),
+            IO(ref e) => e.description(),
+            Serde(ref e) => e.description(),
+            Fault { .. } => "Jira client error",
+            Unauthorized => "Unauthorized",
         }
     }
 
     fn cause(&self) -> Option<&::std::error::Error> {
         use Error::*;
-        match self {
-            &Http(ref e) => Some(e),
-            &IO(ref e) => Some(e),
-            &Serde(ref e) => Some(e),
-            &Fault { .. } => None,
-            &Unauthorized => None,
+        match *self {
+            Http(ref e) => Some(e),
+            IO(ref e) => Some(e),
+            Serde(ref e) => Some(e),
+            Fault { .. } => None,
+            Unauthorized => None,
         }
     }
 }

@@ -19,7 +19,7 @@ impl Search {
         J: Into<String>,
     {
         let mut path = vec!["/search".to_owned()];
-        let query_options = options.serialize().unwrap_or(String::new());
+        let query_options = options.serialize().unwrap_or_default();
         let query = form_urlencoded::Serializer::new(query_options)
             .append_pair("jql", &jql.into())
             .finish();
