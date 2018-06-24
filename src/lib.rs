@@ -32,6 +32,8 @@ pub use rep::*;
 pub mod resolution;
 pub mod boards;
 pub use boards::*;
+pub mod sprints;
+pub use sprints::*;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
@@ -97,6 +99,11 @@ impl Jira {
     // return boards interface
     pub fn boards(&self) -> Boards {
         Boards::new(self)
+    }
+
+    // return boards interface
+    pub fn sprints(&self) -> Sprints {
+        Sprints::new(self)
     }
 
     fn post<D, S>(&self, endpoint: &str, body: S) -> Result<D>

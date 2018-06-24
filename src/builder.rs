@@ -1,5 +1,5 @@
-use url::form_urlencoded;
 use std::collections::HashMap;
+use url::form_urlencoded;
 
 /// options availble for search
 #[derive(Default, Clone, Debug)]
@@ -106,6 +106,11 @@ impl SearchOptionsBuilder {
                 .collect::<Vec<String>>()
                 .join(","),
         );
+        self
+    }
+
+    pub fn state(&mut self, s: &str) -> &mut SearchOptionsBuilder {
+        self.params.insert("state", s.to_string());
         self
     }
 
