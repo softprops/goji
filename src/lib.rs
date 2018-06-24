@@ -139,7 +139,6 @@ impl Jira {
         let mut body = String::new();
         try!(res.read_to_string(&mut body));
         debug!("status {:?} body '{:?}'", res.status(), body);
-        println!("status {:?} body '{:?}'", res.status(), body);
         match res.status() {
             StatusCode::Unauthorized => {
                 // returns unparsable html
