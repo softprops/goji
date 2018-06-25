@@ -54,6 +54,6 @@ fn main() {
 ## what's with the name
 
 Jira's name is a [shortened form of gojira](https://en.wikipedia.org/wiki/Jira_(software)),
-another name for godzilla. Goji a play on that.
+another name for godzilla. Goji is a play on that.
 
 Doug Tangren (softprops) 2016-2018
