@@ -1,3 +1,9 @@
+# 0.2.2
+
+* added sprints interfaces [#24](https://github.com/softprops/goji/pull/24)
+* added boarders interfaces [#21](https://github.com/softprops/goji/pull/21)
+* added agile api [#20](https://github.com/softprops/goji/pull/20)
+
 # 0.2.1
 
 * updated issue and attachment interfaces

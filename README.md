@@ -1,6 +1,6 @@
 # goji [![Build Status](https://travis-ci.org/softprops/goji.svg?branch=master)](https://travis-ci.org/softprops/goji) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE) [![crates.io](http://meritbadge.herokuapp.com/goji)](https://crates.io/crates/goji) [![Released API docs](https://docs.rs/goji/badge.svg)](http://docs.rs/goji) [![Master API docs](https://img.shields.io/badge/docs-master-green.svg)](https://softprops.github.io/goji)
 
-> a rust interface for jira
+> a rust interface for [jira](https://www.atlassian.com/software/jira)
 
 ## install
 
@@ -51,4 +51,9 @@ fn main() {
 }
 ```
 
-Doug Tangren (softprops) 2016
+## what's with the name
+
+Jira's name is a [shortened form of gojira](https://en.wikipedia.org/wiki/Jira_(software)),
+another name for godzilla. Goji a play on that.
+
+Doug Tangren (softprops) 2016-2018
