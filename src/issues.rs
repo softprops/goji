@@ -1,4 +1,5 @@
-use super::{Issue, Jira, Result};
+// Ours
+use {Issue, Jira, Result};
 
 /// issue options
 #[derive(Debug)]

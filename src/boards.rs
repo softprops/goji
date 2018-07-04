@@ -1,5 +1,8 @@
-use super::{Jira, Result, SearchOptions};
+// Third party
 use url::form_urlencoded;
+
+// Ours
+use {Jira, Result, SearchOptions};
 
 #[derive(Debug)]
 pub struct Boards {

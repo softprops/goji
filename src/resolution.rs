@@ -1,6 +1,8 @@
-use super::{Jira, Result};
-
+// Third party
 use std::collections::BTreeMap;
+
+// Ours
+use {Jira, Result};
 
 #[derive(Debug)]
 pub struct Resolution {

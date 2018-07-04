@@ -1,5 +1,8 @@
-use super::{Board, Jira, Result, SearchOptions};
+// Third party
 use url::form_urlencoded;
+
+// Ours
+use {Board, Jira, Result, SearchOptions};
 
 #[derive(Debug)]
 pub struct Sprints {
@@ -98,8 +101,7 @@ impl<'a> Iterator for SprintsIter<'a> {
             if self.more() {
                 match self.jira.sprints().list(
                     self.board,
-                    &self
-                        .search_options
+                    &self.search_options
                         .as_builder()
                         .max_results(self.results.max_results)
                         .start_at(self.results.start_at + self.results.max_results)

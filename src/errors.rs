@@ -1,8 +1,11 @@
-use std::io::Error as IoError;
+// Third party
 use reqwest::Error as HttpError;
 use reqwest::StatusCode;
 use serde_json::error::Error as SerdeError;
-use super::Errors;
+use std::io::Error as IoError;
+
+// Ours
+use Errors;
 
 /// an enumeration over potential errors
 /// that may happen when sending a request to jira

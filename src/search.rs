@@ -1,5 +1,8 @@
-use super::{Issue, Jira, Result, SearchOptions, SearchResults};
+// Third party
 use url::form_urlencoded;
+
+// Ours
+use {Issue, Jira, Result, SearchOptions, SearchResults};
 
 /// search interface
 #[derive(Debug)]

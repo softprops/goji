@@ -1,8 +1,12 @@
+// Third party
+
 use serde::Deserialize;
 use serde::Serialize;
 use serde_json;
 use std::collections::BTreeMap;
-use super::Result;
+
+// Ours
+use Result;
 
 /// represents an general jira error response
 #[derive(Deserialize, Debug)]

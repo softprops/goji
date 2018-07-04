@@ -9,14 +9,16 @@ extern crate serde_derive;
 extern crate serde_json;
 extern crate url;
 
+// Std lib
 use std::io::Read;
 
-use reqwest::header::{Authorization, Basic};
+// Third party
+use reqwest::header::{Authorization, Basic, ContentType};
 use reqwest::{Client, Method, StatusCode};
-use reqwest::header::ContentType;
-use serde::Serialize;
 use serde::de::DeserializeOwned;
+use serde::Serialize;
 
+// Ours
 mod transitions;
 pub use transitions::*;
 pub mod issues;
@@ -29,8 +31,8 @@ mod errors;
 pub use errors::*;
 mod rep;
 pub use rep::*;
-pub mod resolution;
 pub mod boards;
+pub mod resolution;
 pub use boards::*;
 pub mod sprints;
 pub use sprints::*;
