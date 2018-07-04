@@ -27,7 +27,7 @@ use goji::{Credentials, Jira};
 use std::env;
 
 fn main() {
-    env_logger::init()
+    drop(env_logger::init());
     if let (Ok(host), Ok(user), Ok(pass)) =
         (
             env::var("JIRA_HOST"),
