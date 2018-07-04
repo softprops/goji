@@ -1,3 +1,5 @@
+//! Interfaces for accessing and managing boards
+
 // Third party
 use url::form_urlencoded;
 

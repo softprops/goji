@@ -1,3 +1,5 @@
+//! Interfaces for accessing and managing sprints
+
 // Third party
 use url::form_urlencoded;
 

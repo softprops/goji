@@ -1,3 +1,7 @@
+# 0.2.3
+
+* fix breaking changes with agile api paths
+
 # 0.2.2
 
 * added sprints interfaces [#24](https://github.com/softprops/goji/pull/24)

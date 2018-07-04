@@ -1,3 +1,5 @@
+//! Interfaces for searching for issues
+
 // Third party
 use url::form_urlencoded;
 

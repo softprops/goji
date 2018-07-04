@@ -1,3 +1,5 @@
+//! Interfaces for accessing and managing issues
+//!
 // Ours
 use {Issue, Jira, Result};
 

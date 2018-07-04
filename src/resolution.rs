@@ -1,3 +1,5 @@
+//! Interfaces for accessing and managing resolutions
+
 // Third party
 use std::collections::BTreeMap;
 
