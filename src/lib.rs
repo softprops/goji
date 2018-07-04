@@ -113,7 +113,7 @@ impl Jira {
         D: DeserializeOwned,
         S: Serialize,
     {
-        let data = try!(serde_json::to_string::<S>(&body));
+        let data = serde_json::to_string::<S>(&body)?;
         debug!("Json request: {}", data);
         self.request::<D>(Method::Post, endpoint, Some(data.into_bytes()))
     }
@@ -140,13 +140,13 @@ impl Jira {
             })).header(ContentType::json()),
         };
 
-        let mut res = try!(match body {
-            Some(bod) => builder.body(bod).send(),
-            _ => builder.send(),
-        });
+        let mut res = match body {
+            Some(bod) => builder.body(bod).send()?,
+            _ => builder.send()?,
+        };
 
         let mut body = String::new();
-        try!(res.read_to_string(&mut body));
+        res.read_to_string(&mut body)?;
         debug!("status {:?} body '{:?}'", res.status(), body);
         match res.status() {
             StatusCode::Unauthorized => {
@@ -155,9 +155,9 @@ impl Jira {
             }
             client_err if client_err.is_client_error() => Err(Error::Fault {
                 code: res.status(),
-                errors: try!(serde_json::from_str::<Errors>(&body)),
+                errors: serde_json::from_str::<Errors>(&body)?,
             }),
-            _ => Ok(try!(serde_json::from_str::<D>(&body))),
+            _ => Ok(serde_json::from_str::<D>(&body)?),
         }
     }
 }

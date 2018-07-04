@@ -33,10 +33,9 @@ impl Issue {
     where
         for<'de> F: Deserialize<'de>,
     {
-        self.fields.get(name).map(|value| {
-            let decoded = try!(serde_json::value::from_value::<F>(value.clone()));
-            Ok(decoded)
-        })
+        self.fields
+            .get(name)
+            .map(|value| Ok(serde_json::value::from_value::<F>(value.clone())?))
     }
 
     fn user_field(&self, name: &str) -> Option<Result<User>> {
