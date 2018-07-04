@@ -5,7 +5,7 @@ use goji::{Credentials, Jira, TransitionTriggerOptions};
 use std::env;
 
 fn main() {
-    env_logger::init().unwrap();
+    drop(env_logger::init());
     if let (Ok(host), Ok(user), Ok(pass), Ok(key)) = (
         env::var("JIRA_HOST"),
         env::var("JIRA_USER"),
