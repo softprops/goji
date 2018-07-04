@@ -13,7 +13,7 @@ goji = "0.2"
 
 ## usage
 
-Please browse the examples directory in this repo for some example applications.
+Please browse the [examples](examples/) directory in this repo for some example applications.
 
 Basic usage requires a jira host, and a flavor of `jira::Credentials` for authorization. For user authenticated requests you'll typically want to use `jira::Credentials::Basic` with your jira username and password.
 
