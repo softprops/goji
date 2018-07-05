@@ -57,7 +57,8 @@ impl Sprints {
 
         path.push(query);
 
-        self.jira.get::<SprintResults>(path.join("?").as_ref())
+        self.jira
+            .get::<SprintResults>("agile", path.join("?").as_ref())
     }
 
     /// runs a type why may be used to iterate over consecutive pages of results

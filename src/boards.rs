@@ -37,15 +37,21 @@ impl Boards {
         Boards { jira: jira.clone() }
     }
 
+    /// Get a single board
+    ///
+    /// See this [jira docs](https://docs.atlassian.com/jira-software/REST/7.0.4/#agile/1.0/board-getBoard)
+    /// for more information
     pub fn get<I>(&self, id: I) -> Result<Board>
     where
         I: Into<String>,
     {
-        self.jira.get(&format!("/board/{}", id.into()))
+        self.jira.get("agile", &format!("/board/{}", id.into()))
     }
 
-    /// returns a single page of board results
-    /// https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/board-getAllBoards
+    /// Returns a single page of board results
+    ///
+    /// See the [jira docs](https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/board-getAllBoards)
+    /// for more information
     pub fn list(&self, options: &SearchOptions) -> Result<BoardResults> {
         let mut path = vec!["/board".to_owned()];
         let query_options = options.serialize().unwrap_or_default();
@@ -53,17 +59,20 @@ impl Boards {
 
         path.push(query);
 
-        self.jira.get::<BoardResults>(path.join("?").as_ref())
+        self.jira
+            .get::<BoardResults>("agile", path.join("?").as_ref())
     }
 
-    /// runs a type why may be used to iterate over consecutive pages of results
-    /// https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/board-getAllBoards
+    /// Returns a type which may be used to iterate over consecutive pages of results
+    ///
+    /// See the [jira docs](https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/board-getAllBoards)
+    /// for more information
     pub fn iter<'a>(&self, options: &'a SearchOptions) -> Result<BoardsIter<'a>> {
         BoardsIter::new(options, &self.jira)
     }
 }
 
-/// provides an iterator over multiple pages of search results
+/// Provides an iterator over multiple pages of search results
 #[derive(Debug)]
 pub struct BoardsIter<'a> {
     jira: Jira,

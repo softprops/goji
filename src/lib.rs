@@ -108,28 +108,34 @@ impl Jira {
         Sprints::new(self)
     }
 
-    fn post<D, S>(&self, endpoint: &str, body: S) -> Result<D>
+    fn post<D, S>(&self, api_name: &str, endpoint: &str, body: S) -> Result<D>
     where
         D: DeserializeOwned,
         S: Serialize,
     {
         let data = serde_json::to_string::<S>(&body)?;
         debug!("Json request: {}", data);
-        self.request::<D>(Method::Post, endpoint, Some(data.into_bytes()))
+        self.request::<D>(Method::Post, api_name, endpoint, Some(data.into_bytes()))
     }
 
-    fn get<D>(&self, endpoint: &str) -> Result<D>
+    fn get<D>(&self, api_name: &str, endpoint: &str) -> Result<D>
     where
         D: DeserializeOwned,
     {
-        self.request::<D>(Method::Get, endpoint, None)
+        self.request::<D>(Method::Get, api_name, endpoint, None)
     }
 
-    fn request<D>(&self, method: Method, endpoint: &str, body: Option<Vec<u8>>) -> Result<D>
+    fn request<D>(
+        &self,
+        method: Method,
+        api_name: &str,
+        endpoint: &str,
+        body: Option<Vec<u8>>,
+    ) -> Result<D>
     where
         D: DeserializeOwned,
     {
-        let url = format!("{}/rest/agile/latest{}", self.host, endpoint);
+        let url = format!("{}/rest/{}/latest{}", self.host, api_name, endpoint);
         debug!("url -> {:?}", url);
 
         let mut req = self.client.request(method, &url)?;

@@ -1,5 +1,5 @@
 //! Interfaces for accessing and managing issues
-//!
+
 // Ours
 use {Issue, Jira, Result};
 
@@ -70,9 +70,9 @@ impl Issues {
     where
         I: Into<String>,
     {
-        self.jira.get(&format!("/issue/{}", id.into()))
+        self.jira.get("api", &format!("/issue/{}", id.into()))
     }
     pub fn create(&self, data: CreateIssue) -> Result<CreateResponse> {
-        self.jira.post("/issue", data)
+        self.jira.post("api", "/issue", data)
     }
 }

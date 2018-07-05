@@ -24,10 +24,10 @@ impl Transitions {
     /// return list of transitions options for this issue
     pub fn list(&self) -> Result<Vec<TransitionOption>> {
         self.jira
-            .get::<TransitionOptions>(&format!(
-                "/issue/{}/transitions?expand=transitions.fields",
-                self.key
-            ))
+            .get::<TransitionOptions>(
+                "api",
+                &format!("/issue/{}/transitions?expand=transitions.fields", self.key),
+            )
             .map(|wrapper| wrapper.transitions)
     }
 
@@ -36,6 +36,7 @@ impl Transitions {
     pub fn trigger(&self, trans: TransitionTriggerOptions) -> Result<()> {
         self.jira
             .post::<(), TransitionTriggerOptions>(
+                "api",
                 &format!("/issue/{}/transitions", self.key),
                 trans,
             )
