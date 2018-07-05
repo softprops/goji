@@ -6,7 +6,7 @@ use url::form_urlencoded;
 // Ours
 use {Issue, Jira, Result, SearchOptions, SearchResults};
 
-/// search interface
+/// Search interface
 #[derive(Debug)]
 pub struct Search {
     jira: Jira,
@@ -17,8 +17,10 @@ impl Search {
         Search { jira: jira.clone() }
     }
 
-    /// returns a single page of search results
-    /// https://docs.atlassian.com/jira/REST/latest/#api/2/search
+    /// Returns a single page of search results
+    ///
+    /// See the [jira docs](https://docs.atlassian.com/jira/REST/latest/#api/2/search)
+    /// for more information
     pub fn list<J>(&self, jql: J, options: &SearchOptions) -> Result<SearchResults>
     where
         J: Into<String>,
@@ -33,8 +35,10 @@ impl Search {
             .get::<SearchResults>("api", path.join("?").as_ref())
     }
 
-    /// runs a type why may be used to iterate over consecutive pages of results
-    /// https://docs.atlassian.com/jira/REST/latest/#api/2/search
+    /// Return a type which may be used to iterate over consecutive pages of results
+    ///
+    /// See the [jira docs](https://docs.atlassian.com/jira/REST/latest/#api/2/search)
+    /// for more information
     pub fn iter<'a, J>(&self, jql: J, options: &'a SearchOptions) -> Result<Iter<'a>>
     where
         J: Into<String>,
