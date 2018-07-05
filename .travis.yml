@@ -1,5 +1,7 @@
 sudo: false
+
 language: rust
+
 matrix:
   fast_finish: true
   include:
@@ -8,35 +10,46 @@ matrix:
   - rust: stable
   allow_failures:
   - rust: nightly
+
 script:
 - cargo build
 - cargo test
+
 cache:
   cargo: true
   apt: true
   directories:
   - target/debug/deps
   - target/debug/build
+
 addons:
   apt:
     packages:
-    - libcurl4-openssl-dev
-    - libelf-dev
-    - libdw-dev
-    - binutils-dev
-after_success: |
-  [ $TRAVIS_RUST_VERSION = stable ] &&
-  [ $TRAVIS_BRANCH = master ] &&
-  [ $TRAVIS_PULL_REQUEST = false ] &&
-  cargo doc --no-deps &&
-  echo "<meta http-equiv=refresh content=0;url=`echo $TRAVIS_REPO_SLUG | cut -d '/' -f 2`/index.html>" > target/doc/index.html &&
-  pip install --user ghp-import &&
-  /home/travis/.local/bin/ghp-import -n target/doc &&
-  git push -fq https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git gh-pages &&
-  wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz &&
-  tar xzf master.tar.gz && mkdir kcov-master/build && cd kcov-master/build && cmake .. && make && make install DESTDIR=../tmp && cd ../.. &&
-  ls target/debug &&
-  ./kcov-master/tmp/usr/local/bin/kcov --verify --coveralls-id=$TRAVIS_JOB_ID --exclude-pattern=/.cargo target/kcov target/debug/goji-*
+      # required by tarpaulin code coverage tool
+      - libssl-dev
+
+install: |
+  if [[ "$TRAVIS_RUST_VERSION" == stable ]] && [[ $(cargo tarpaulin --version) != *0.6.2 ]]; then
+    `RUSTFLAGS="--cfg procmacro2_semver_exempt" cargo install  --force --version 0.6.2  cargo-tarpaulin`
+  fi
+
+after_success:
+  # report coverage to coveralls
+  # see https://github.com/xd009642/tarpaulin for more information
+  - '[ $TRAVIS_EVENT_TYPE != "cron" ] &&
+    [ $TRAVIS_RUST_VERSION = stable ] &&
+    [ $TRAVIS_BRANCH = master ] &&
+    [ $TRAVIS_PULL_REQUEST = false ] &&
+    cargo tarpaulin --ciserver travis-ci --coveralls $TRAVIS_JOB_ID || true'
+  - '[ $TRAVIS_RUST_VERSION = stable ] &&
+    [ $TRAVIS_BRANCH = master ] &&
+    [ $TRAVIS_PULL_REQUEST = false ]
+    && cargo doc --no-deps &&
+    echo "<meta http-equiv=refresh content=0;url=`echo $TRAVIS_REPO_SLUG | cut -d / -f 2`/index.html>" > target/doc/index.html &&
+    pip install --user ghp-import &&
+    /home/travis/.local/bin/ghp-import -n target/doc &&
+    git push -fq https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git gh-pages &&
+    echo "documented"'
 env:
   global:
     secure: AijJsdo/C95ZJYoIkdJXCUkgl4jzkkduYcz84S9/b2kd16mntv96tCN8c3x1IRyr6vnlRdBwZn6ZcvKSHJXdRKfrDYHrh2/GZnMOOP99w1YcCYK2U5geK2/6ubQ7BzhVDulaGDEZz2uXkkdEIpFD9Satq2UiYNlIc6xNbU0wkPi8c/H6JcLNh9cYyK38OJTdGa3ljzrCI3GxVdVE2rzxyZjnSm9TDmb8KhiC2LJqN10h4oG3czcS0n1lZxSIp0wJQuM0L1i79omHRKNfJo1h0JpKqDDJMk6KzBVI3uRU3MvUpVMrnO+zyK8LnZjcXHczs6Ms29sPKIDTYLwg1MMBYPm4bmpeogP/8wMttSCYjCR55lao6xJBcMzgdMLtjT/GEyahlCfDOFrSLd7ZwyJUiep2TcECguz68P32x4gf1CmGu3X9DownBEcUBdKgCw973XbBbQEM3qW4p0EhG2ljS32roe9uzBmVSaRPjEsAiYl7CKOUQxuXxN1qp4TYa9IdXsjrIlFmEVILKmsZ7IcgHVSxaS8LnonwwrCH8DgdMErGo06ldKYJLaJIHVvrvexsAUpTVEeJtDpNc6aETP/+0g4/ZyCkq8ujqnOllVqotcJZNMAIANZhtkwW6VZvgz6LlDydruuYozfTlPS3PXwlr3mEqjLx9ut8yvIDYt4Ty70=
