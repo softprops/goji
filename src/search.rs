@@ -29,7 +29,8 @@ impl Search {
             .append_pair("jql", &jql.into())
             .finish();
         path.push(query);
-        self.jira.get::<SearchResults>(path.join("?").as_ref())
+        self.jira
+            .get::<SearchResults>("api", path.join("?").as_ref())
     }
 
     /// runs a type why may be used to iterate over consecutive pages of results

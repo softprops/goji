@@ -31,6 +31,6 @@ impl Resolution {
     where
         I: Into<String>,
     {
-        self.jira.get(&format!("/resolution/{}", id.into()))
+        self.jira.get("api", &format!("/resolution/{}", id.into()))
     }
 }
