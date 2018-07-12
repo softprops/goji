@@ -47,11 +47,7 @@ impl Sprints {
     /// returns a single page of board results
     /// https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/board/{boardId}/sprint-getAllSprints
     pub fn list(&self, board: &Board, options: &SearchOptions) -> Result<SprintResults> {
-        let mut path = vec![
-            "/board/".to_owned(),
-            board.id.to_string(),
-            "/sprint".to_owned(),
-        ];
+        let mut path = vec![format!("/board/{}/sprint", board.id.to_string())];
         let query_options = options.serialize().unwrap_or_default();
         let query = form_urlencoded::Serializer::new(query_options).finish();
 
