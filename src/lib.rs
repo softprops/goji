@@ -136,7 +136,7 @@ impl Jira {
         D: DeserializeOwned,
     {
         let url = format!("{}/rest/{}/latest{}", self.host, api_name, endpoint);
-        debug!("url -> {:?}", url);
+        println!("url -> {:?}", url);
 
         let mut req = self.client.request(method, &url)?;
         let builder = match self.credentials {
