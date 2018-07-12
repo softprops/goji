@@ -6,7 +6,7 @@ use serde_json;
 use std::collections::BTreeMap;
 
 // Ours
-use Result;
+use {Jira, Result};
 
 /// represents an general jira error response
 #[derive(Deserialize, Debug)]
@@ -144,6 +144,10 @@ impl Issue {
             .and_then(|value| value.ok())
             .map(|value| value.comments)
             .unwrap_or_default()
+    }
+
+    pub fn permalink(&self, jira: &Jira) -> String {
+        format!("{}/browse/{}", jira.host, self.key)
     }
 }
 
