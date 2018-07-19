@@ -89,7 +89,7 @@ impl<'a> SprintsIter<'a> {
     }
 
     fn more(&self) -> bool {
-        self.results.is_last
+        !self.results.is_last
     }
 }
 

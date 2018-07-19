@@ -91,7 +91,7 @@ impl<'a> BoardsIter<'a> {
     }
 
     fn more(&self) -> bool {
-        self.results.is_last
+        !self.results.is_last
     }
 }
 
