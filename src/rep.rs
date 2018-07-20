@@ -88,7 +88,7 @@ impl Issue {
     }
 
     pub fn resolution_date(&self) -> Option<String> {
-        self.string_field("resolution_date")
+        self.string_field("resolutiondate")
             .and_then(|value| value.ok())
     }
 
