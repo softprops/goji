@@ -115,6 +115,16 @@ impl SearchOptionsBuilder {
         self
     }
 
+    pub fn jql(&mut self, s: &str) -> &mut SearchOptionsBuilder {
+        self.params.insert("jql", s.to_string());
+        self
+    }
+
+    pub fn validate_query(&mut self, v: bool) -> &mut SearchOptionsBuilder {
+        self.params.insert("validateQuery", v.to_string());
+        self
+    }
+
     pub fn build(&self) -> SearchOptions {
         SearchOptions {
             params: self.params.clone(),

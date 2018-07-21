@@ -40,4 +40,6 @@ builder_pattern! {
     build_pattern_project_key_or_id: (project_key_or_id, "1234", "projectKeyOrId", "1234"),
     build_pattern_expand: (expand, vec!["expand1", "expand2"], "expand", "expand1,expand2"),
     build_pattern_state: (state, "my_state", "state","my_state"),
+    build_pattern_jql: (jql, "project = '1234'", "jql", "project = '1234'"),
+    build_pattern_jalidate_query: (validate_query, true, "validateQuery", "true"),
 }
