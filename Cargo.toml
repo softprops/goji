@@ -1,6 +1,6 @@
 [package]
 name = "goji"
-version = "0.2.3"
+version = "0.2.4"
 authors = ["softprops <d.tangren@gmail.com>"]
 description = "Rust interface for Jira"
 documentation = "http://softprops.github.io/goji"
