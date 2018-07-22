@@ -1,3 +1,10 @@
+# 0.2.4
+
+* added boards issue search api interface [#30](https://github.com/softprops/goji/pull/30)
+* added `Issue.permalink` convenience method [#31](https://github.com/softprops/goji/pull/31)
+* fixed issue with boards iterator [#32](https://github.com/softprops/goji/pull/32)
+* fix naming issue with `issue.resolutiondate` field [#34](https://github.com/softprops/goji/pull/34/files)
+
 # 0.2.3
 
 * fix breaking changes with agile api paths
