@@ -34,6 +34,8 @@ pub mod resolution;
 pub use crate::boards::*;
 pub mod sprints;
 pub use crate::sprints::*;
+pub mod backlog;
+pub use crate::backlog::*;
 
 #[derive(Deserialize, Debug)]
 pub struct EmptyResponse;
@@ -109,6 +111,11 @@ impl Jira {
         Sprints::new(self)
     }
 
+    // return backlog interface
+    pub fn backlog(&self) -> Backlog {
+        Backlog::new(self)
+    }
+
     fn post<D, S>(&self, api_name: &str, endpoint: &str, body: S) -> Result<D>
     where
         D: DeserializeOwned,
@@ -164,6 +171,7 @@ impl Jira {
             }),
             _ => {
                 let data = if body == "" { "null" } else { &body };
+
                 Ok(serde_json::from_str::<D>(data)?)
             }
         }
