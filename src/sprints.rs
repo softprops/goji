@@ -11,7 +11,7 @@ pub struct Sprints {
     jira: Jira,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Sprint {
     pub id: u64,
     #[serde(rename = "self")]
