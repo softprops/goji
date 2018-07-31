@@ -37,6 +37,9 @@ pub use boards::*;
 pub mod sprints;
 pub use sprints::*;
 
+#[derive(Deserialize, Debug)]
+pub struct EmptyResponse;
+
 pub type Result<T> = std::result::Result<T, Error>;
 
 /// Types of authentication credentials
@@ -155,15 +158,17 @@ impl Jira {
         res.read_to_string(&mut body)?;
         debug!("status {:?} body '{:?}'", res.status(), body);
         match res.status() {
-            StatusCode::Unauthorized => {
-                // returns unparsable html
-                Err(Error::Unauthorized)
-            }
+            StatusCode::Unauthorized => Err(Error::Unauthorized),
+            StatusCode::MethodNotAllowed => Err(Error::MethodNotAllowed),
+            StatusCode::NotFound => Err(Error::NotFound),
             client_err if client_err.is_client_error() => Err(Error::Fault {
                 code: res.status(),
                 errors: serde_json::from_str::<Errors>(&body)?,
             }),
-            _ => Ok(serde_json::from_str::<D>(&body)?),
+            _ => {
+                let data = if body == "" { "null" } else { &body };
+                Ok(serde_json::from_str::<D>(data)?)
+            }
         }
     }
 }

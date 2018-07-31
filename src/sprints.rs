@@ -4,7 +4,7 @@
 use url::form_urlencoded;
 
 // Ours
-use {Board, Jira, Result, SearchOptions};
+use {Board, EmptyResponse, Jira, Result, SearchOptions};
 
 #[derive(Debug)]
 pub struct Sprints {
@@ -39,6 +39,11 @@ pub struct SprintResults {
     pub values: Vec<Sprint>,
 }
 
+#[derive(Serialize, Debug)]
+struct MoveIssues {
+    issues: Vec<String>,
+}
+
 impl Sprints {
     pub fn new(jira: &Jira) -> Sprints {
         Sprints { jira: jira.clone() }
@@ -55,6 +60,15 @@ impl Sprints {
 
         self.jira
             .get::<SprintResults>("agile", path.join("?").as_ref())
+    }
+
+    /// move issues into sprint
+    /// https://docs.atlassian.com/jira-software/REST/7.3.1/#agile/1.0/sprint-moveIssuesToSprint
+    pub fn move_issues(&self, sprint_id: u64, issues: Vec<String>) -> Result<EmptyResponse> {
+        let path = format!("/sprint/{}/issue", sprint_id);
+        let data = MoveIssues { issues };
+
+        self.jira.post("agile", &path, data)
     }
 
     /// runs a type why may be used to iterate over consecutive pages of results
