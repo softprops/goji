@@ -65,14 +65,14 @@ pub struct CreateResponse {
 }
 
 #[derive(Deserialize, Debug)]
-pub struct IssueResults {
+pub struct Paginated<T> {
     pub expand: String,
     #[serde(rename = "maxResults")]
     pub max_results: u64,
     #[serde(rename = "startAt")]
     pub start_at: u64,
     pub total: u64,
-    pub issues: Vec<Issue>,
+    pub values: Vec<T>,
 }
 
 impl Issues {
@@ -92,7 +92,7 @@ impl Issues {
 
     /// returns a single page of issues results
     /// https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/board-getIssuesForBoard
-    pub fn list(&self, board: &Board, options: &SearchOptions) -> Result<IssueResults> {
+    pub fn list(&self, board: &Board, options: &SearchOptions) -> Result<Paginated<Issue>> {
         let mut path = vec![format!("/board/{}/issue", board.id)];
         let query_options = options.serialize().unwrap_or_default();
         let query = form_urlencoded::Serializer::new(query_options).finish();
@@ -100,7 +100,7 @@ impl Issues {
         path.push(query);
 
         self.jira
-            .get::<IssueResults>("agile", path.join("?").as_ref())
+            .get::<Paginated<Issue>>("agile", path.join("?").as_ref())
     }
 
     /// runs a type why may be used to iterate over consecutive pages of results
@@ -115,7 +115,7 @@ impl Issues {
 pub struct IssuesIter<'a> {
     jira: Jira,
     board: &'a Board,
-    results: IssueResults,
+    results: Paginated<Issue>,
     search_options: &'a SearchOptions,
 }
 
@@ -138,7 +138,7 @@ impl<'a> IssuesIter<'a> {
 impl<'a> Iterator for IssuesIter<'a> {
     type Item = Issue;
     fn next(&mut self) -> Option<Issue> {
-        self.results.issues.pop().or_else(|| {
+        self.results.values.pop().or_else(|| {
             if self.more() {
                 match self.jira.issues().list(
                     self.board,
@@ -151,7 +151,7 @@ impl<'a> Iterator for IssuesIter<'a> {
                 ) {
                     Ok(new_results) => {
                         self.results = new_results;
-                        self.results.issues.pop()
+                        self.results.values.pop()
                     }
                     _ => None,
                 }
