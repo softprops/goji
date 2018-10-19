@@ -16,25 +16,27 @@ fn main() {
         let jira = Jira::new(host, Credentials::Basic(user, pass)).unwrap();
 
         match jira.search().iter(query, &Default::default()) {
-            Ok(results) => for issue in results {
-                println!(
-                    "{} {} ({}): reporter {} assignee {}",
-                    issue.key,
-                    issue.summary().unwrap_or("???".to_owned()),
-                    issue
-                        .status()
-                        .map(|value| value.name,)
-                        .unwrap_or("???".to_owned(),),
-                    issue
-                        .reporter()
-                        .map(|value| value.display_name,)
-                        .unwrap_or("???".to_owned(),),
-                    issue
-                        .assignee()
-                        .map(|value| value.display_name,)
-                        .unwrap_or("???".to_owned(),)
-                );
-            },
+            Ok(results) => {
+                for issue in results {
+                    println!(
+                        "{} {} ({}): reporter {} assignee {}",
+                        issue.key,
+                        issue.summary().unwrap_or("???".to_owned()),
+                        issue
+                            .status()
+                            .map(|value| value.name,)
+                            .unwrap_or("???".to_owned(),),
+                        issue
+                            .reporter()
+                            .map(|value| value.display_name,)
+                            .unwrap_or("???".to_owned(),),
+                        issue
+                            .assignee()
+                            .map(|value| value.display_name,)
+                            .unwrap_or("???".to_owned(),)
+                    );
+                }
+            }
             Err(err) => panic!("{:#?}", err),
         }
     }
