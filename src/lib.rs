@@ -126,7 +126,7 @@ impl Jira {
     {
         let data = serde_json::to_string::<S>(&body)?;
         debug!("Json request: {}", data);
-        self.request::<D>(Method::Put, api_name, endpoint, Some(data.into_bytes()))
+        self.request::<D>(Method::PUT, api_name, endpoint, Some(data.into_bytes()))
     }
 
     fn get<D>(&self, api_name: &str, endpoint: &str) -> Result<D>
