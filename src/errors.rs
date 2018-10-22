@@ -3,6 +3,7 @@ use reqwest::Error as HttpError;
 use reqwest::StatusCode;
 use serde_json::error::Error as SerdeError;
 use std::io::Error as IoError;
+use std::error::Error as StdError;
 
 // Ours
 use Errors;
@@ -57,12 +58,12 @@ impl ::std::fmt::Display for Error {
                 ref code,
                 ref errors,
             } => writeln!(f, "Jira Client Error ({}):\n{:#?}", code, errors),
-            _ => writeln!(f, "Could not connect to Jira: {}!", self),
+            _ => writeln!(f, "Could not connect to Jira: {}", self.description()),
         }
     }
 }
 
-impl ::std::error::Error for Error {
+impl StdError for Error {
     fn description(&self) -> &str {
         use Error::*;
 
@@ -77,7 +78,7 @@ impl ::std::error::Error for Error {
         }
     }
 
-    fn cause(&self) -> Option<&::std::error::Error> {
+    fn cause(&self) -> Option<&StdError> {
         use Error::*;
 
         match *self {
