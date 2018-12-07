@@ -43,11 +43,9 @@ pub struct Fields {
     pub assignee: Assignee,
     pub components: Vec<Component>,
     pub description: String,
-    pub environment: Option<String>,
     pub issuetype: IssueType,
     pub priority: Priority,
     pub project: Project,
-    pub reporter: Option<Assignee>,
     pub summary: String,
 }
 
