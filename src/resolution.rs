@@ -11,7 +11,7 @@ pub struct Resolution {
     jira: Jira,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Resolved {
     pub id: String,
     pub title: String,

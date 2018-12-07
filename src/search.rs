@@ -83,7 +83,8 @@ impl<'a> Iterator for Iter<'a> {
             if self.more() {
                 match self.jira.search().list(
                     self.jql.clone(),
-                    &self.search_options
+                    &self
+                        .search_options
                         .as_builder()
                         .max_results(self.results.max_results)
                         .start_at(self.results.start_at + self.results.max_results)

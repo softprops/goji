@@ -11,7 +11,7 @@ pub struct Boards {
     jira: Jira,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Board {
     #[serde(rename = "self")]
     pub self_link: String,
@@ -100,12 +100,14 @@ impl<'a> Iterator for BoardsIter<'a> {
     fn next(&mut self) -> Option<Board> {
         self.results.values.pop().or_else(|| {
             if self.more() {
-                match self.jira.boards().list(&self.search_options
-                    .as_builder()
-                    .max_results(self.results.max_results)
-                    .start_at(self.results.start_at + self.results.max_results)
-                    .build())
-                {
+                match self.jira.boards().list(
+                    &self
+                        .search_options
+                        .as_builder()
+                        .max_results(self.results.max_results)
+                        .start_at(self.results.start_at + self.results.max_results)
+                        .build(),
+                ) {
                     Ok(new_results) => {
                         self.results = new_results;
                         self.results.values.pop()

@@ -11,7 +11,7 @@ pub struct Sprints {
     jira: Jira,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Sprint {
     pub id: u64,
     #[serde(rename = "self")]
@@ -114,7 +114,8 @@ impl<'a> Iterator for SprintsIter<'a> {
             if self.more() {
                 match self.jira.sprints().list(
                     self.board,
-                    &self.search_options
+                    &self
+                        .search_options
                         .as_builder()
                         .max_results(self.results.max_results)
                         .start_at(self.results.start_at + self.results.max_results)

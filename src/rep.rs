@@ -17,7 +17,7 @@ pub struct Errors {
 }
 
 /// represents a single jira issue
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Issue {
     #[serde(rename = "self")]
     pub self_link: String,
@@ -192,19 +192,19 @@ pub struct Visibility {
     pub value: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Changelog {
     pub histories: Vec<History>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct History {
     pub author: User,
     pub created: String,
     pub items: Vec<HistoryItem>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct HistoryItem {
     pub field: String,
     pub from: Option<String>,
@@ -257,7 +257,7 @@ pub struct Version {
     pub self_link: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct User {
     pub active: bool,
     #[serde(rename = "avatarUrls")]

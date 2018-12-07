@@ -9,28 +9,26 @@ extern crate serde_derive;
 extern crate serde_json;
 extern crate url;
 
-// Std lib
 use std::io::Read;
 
-// Third party
-use reqwest::header::{Authorization, Basic, ContentType};
+use reqwest::header::CONTENT_TYPE;
 use reqwest::{Client, Method, StatusCode};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 
-// Ours
-mod transitions;
-pub use transitions::*;
-pub mod issues;
-pub use issues::*;
-mod search;
-pub use search::Search;
 mod builder;
-pub use builder::*;
 mod errors;
-pub use errors::*;
+pub mod issues;
 mod rep;
+mod search;
+mod transitions;
+
+pub use builder::*;
+pub use errors::*;
+pub use issues::*;
 pub use rep::*;
+pub use search::Search;
+pub use transitions::*;
 pub mod boards;
 pub mod resolution;
 pub use boards::*;
@@ -118,14 +116,14 @@ impl Jira {
     {
         let data = serde_json::to_string::<S>(&body)?;
         debug!("Json request: {}", data);
-        self.request::<D>(Method::Post, api_name, endpoint, Some(data.into_bytes()))
+        self.request::<D>(Method::POST, api_name, endpoint, Some(data.into_bytes()))
     }
 
     fn get<D>(&self, api_name: &str, endpoint: &str) -> Result<D>
     where
         D: DeserializeOwned,
     {
-        self.request::<D>(Method::Get, api_name, endpoint, None)
+        self.request::<D>(Method::GET, api_name, endpoint, None)
     }
 
     fn request<D>(
@@ -141,12 +139,11 @@ impl Jira {
         let url = format!("{}/rest/{}/latest{}", self.host, api_name, endpoint);
         debug!("url -> {:?}", url);
 
-        let mut req = self.client.request(method, &url);
+        let req = self.client.request(method, &url);
         let builder = match self.credentials {
-            Credentials::Basic(ref user, ref pass) => req.header(Authorization(Basic {
-                username: user.to_owned(),
-                password: Some(pass.to_owned()),
-            })).header(ContentType::json()),
+            Credentials::Basic(ref user, ref pass) => req
+                .basic_auth(user.to_owned(), Some(pass.to_owned()))
+                .header(CONTENT_TYPE, "application/json"),
         };
 
         let mut res = match body {
@@ -158,9 +155,9 @@ impl Jira {
         res.read_to_string(&mut body)?;
         debug!("status {:?} body '{:?}'", res.status(), body);
         match res.status() {
-            StatusCode::Unauthorized => Err(Error::Unauthorized),
-            StatusCode::MethodNotAllowed => Err(Error::MethodNotAllowed),
-            StatusCode::NotFound => Err(Error::NotFound),
+            StatusCode::UNAUTHORIZED => Err(Error::Unauthorized),
+            StatusCode::METHOD_NOT_ALLOWED => Err(Error::MethodNotAllowed),
+            StatusCode::NOT_FOUND => Err(Error::NotFound),
             client_err if client_err.is_client_error() => Err(Error::Fault {
                 code: res.status(),
                 errors: serde_json::from_str::<Errors>(&body)?,
