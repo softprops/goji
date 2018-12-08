@@ -1,0 +1,271 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `goji` crate."><meta name="keywords" content="rust, rustlang, rust-lang, goji"><title>goji - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><p class='location'>Crate goji</p><div class="sidebar-elems"><a id='all-types' href='all.html'><p>See all goji's items</p></a><div class="block items"><ul><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'goji', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/goji/lib.rs.html#1-171' title='goto source code'>[src]</a></span><span class='in-band'>Crate <a class="mod" href=''>goji</a></span></h1><div class='docblock'><p>Goji provides an interface for Jira's REST api</p>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Re-exports</a></h2>
+<table><tr><td><code>pub use crate::<a class="mod" href="../goji/issues/index.html" title="mod goji::issues">issues</a>::*;</code></td></tr><tr><td><code>pub use crate::<a class="mod" href="../goji/boards/index.html" title="mod goji::boards">boards</a>::*;</code></td></tr><tr><td><code>pub use crate::<a class="mod" href="../goji/sprints/index.html" title="mod goji::sprints">sprints</a>::*;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="boards/index.html"
+                                  title='mod goji::boards'>boards</a></td>
+                           <td class='docblock-short'>
+                                <p>Interfaces for accessing and managing boards</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="issues/index.html"
+                                  title='mod goji::issues'>issues</a></td>
+                           <td class='docblock-short'>
+                                <p>Interfaces for accessing and managing issues</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="resolution/index.html"
+                                  title='mod goji::resolution'>resolution</a></td>
+                           <td class='docblock-short'>
+                                <p>Interfaces for accessing and managing resolutions</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="sprints/index.html"
+                                  title='mod goji::sprints'>sprints</a></td>
+                           <td class='docblock-short'>
+                                <p>Interfaces for accessing and managing sprints</p>
+
+                           </td>
+                       </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Attachment.html"
+                                  title='struct goji::Attachment'>Attachment</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Changelog.html"
+                                  title='struct goji::Changelog'>Changelog</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Comment.html"
+                                  title='struct goji::Comment'>Comment</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Comments.html"
+                                  title='struct goji::Comments'>Comments</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.EmptyResponse.html"
+                                  title='struct goji::EmptyResponse'>EmptyResponse</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Errors.html"
+                                  title='struct goji::Errors'>Errors</a></td>
+                           <td class='docblock-short'>
+                                <p>represents an general jira error response</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.History.html"
+                                  title='struct goji::History'>History</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.HistoryItem.html"
+                                  title='struct goji::HistoryItem'>HistoryItem</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Issue.html"
+                                  title='struct goji::Issue'>Issue</a></td>
+                           <td class='docblock-short'>
+                                <p>represents a single jira issue</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.IssueLink.html"
+                                  title='struct goji::IssueLink'>IssueLink</a></td>
+                           <td class='docblock-short'>
+                                <p>represents link relationship between issues</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Jira.html"
+                                  title='struct goji::Jira'>Jira</a></td>
+                           <td class='docblock-short'>
+                                <p>Entrypoint into client interface
+https://docs.atlassian.com/jira/REST/latest/</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.LinkType.html"
+                                  title='struct goji::LinkType'>LinkType</a></td>
+                           <td class='docblock-short'>
+                                <p>represents type of issue relation</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Resolution.html"
+                                  title='struct goji::Resolution'>Resolution</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Search.html"
+                                  title='struct goji::Search'>Search</a></td>
+                           <td class='docblock-short'>
+                                <p>Search interface</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.SearchOptions.html"
+                                  title='struct goji::SearchOptions'>SearchOptions</a></td>
+                           <td class='docblock-short'>
+                                <p>options availble for search</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.SearchOptionsBuilder.html"
+                                  title='struct goji::SearchOptionsBuilder'>SearchOptionsBuilder</a></td>
+                           <td class='docblock-short'>
+                                <p>a builder interface for search option
+Typically this is initialized with SearchOptions::builder()</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.SearchResults.html"
+                                  title='struct goji::SearchResults'>SearchResults</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Status.html"
+                                  title='struct goji::Status'>Status</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Transition.html"
+                                  title='struct goji::Transition'>Transition</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.TransitionOption.html"
+                                  title='struct goji::TransitionOption'>TransitionOption</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.TransitionOptions.html"
+                                  title='struct goji::TransitionOptions'>TransitionOptions</a></td>
+                           <td class='docblock-short'>
+                                <p>contains list of options an issue can transitions through</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.TransitionTo.html"
+                                  title='struct goji::TransitionTo'>TransitionTo</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.TransitionTriggerOptions.html"
+                                  title='struct goji::TransitionTriggerOptions'>TransitionTriggerOptions</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.TransitionTriggerOptionsBuilder.html"
+                                  title='struct goji::TransitionTriggerOptionsBuilder'>TransitionTriggerOptionsBuilder</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Transitions.html"
+                                  title='struct goji::Transitions'>Transitions</a></td>
+                           <td class='docblock-short'>
+                                <p>issue transition interface</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.User.html"
+                                  title='struct goji::User'>User</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Version.html"
+                                  title='struct goji::Version'>Version</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Visibility.html"
+                                  title='struct goji::Visibility'>Visibility</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="enum" href="enum.Credentials.html"
+                                  title='enum goji::Credentials'>Credentials</a></td>
+                           <td class='docblock-short'>
+                                <p>Types of authentication credentials</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="enum" href="enum.Error.html"
+                                  title='enum goji::Error'>Error</a></td>
+                           <td class='docblock-short'>
+                                <p>an enumeration over potential errors
+that may happen when sending a request to jira</p>
+
+                           </td>
+                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.Result.html"
+                                  title='type goji::Result'>Result</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../";window.currentCrate = "goji";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>

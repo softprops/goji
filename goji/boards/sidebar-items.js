@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Board",""],["BoardResults",""],["Boards",""],["BoardsIter","Provides an iterator over multiple pages of search results"]]});

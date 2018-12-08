@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Assignee",""],["Component",""],["CreateIssue",""],["CreateResponse",""],["Fields",""],["IssueResults",""],["IssueType",""],["Issues","issue options"],["IssuesIter","provides an iterator over multiple pages of search results"],["Priority",""],["Project",""]]});
