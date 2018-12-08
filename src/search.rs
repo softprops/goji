@@ -4,7 +4,7 @@
 use url::form_urlencoded;
 
 // Ours
-use {Issue, Jira, Result, SearchOptions, SearchResults};
+use crate::{Issue, Jira, Result, SearchOptions, SearchResults};
 
 /// Search interface
 #[derive(Debug)]

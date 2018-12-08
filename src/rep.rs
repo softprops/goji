@@ -6,7 +6,7 @@ use serde_json;
 use std::collections::BTreeMap;
 
 // Ours
-use {Jira, Result};
+use crate::{Jira, Result};
 
 /// represents an general jira error response
 #[derive(Deserialize, Debug)]

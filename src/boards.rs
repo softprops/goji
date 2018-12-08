@@ -4,7 +4,7 @@
 use url::form_urlencoded;
 
 // Ours
-use {Jira, Result, SearchOptions};
+use crate::{Jira, Result, SearchOptions};
 
 #[derive(Debug)]
 pub struct Boards {

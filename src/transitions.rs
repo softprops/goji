@@ -1,7 +1,7 @@
 //! Interfaces for accessing and managing transition
 
 // Ours
-use {Error, Jira, Result, TransitionOption, TransitionOptions, TransitionTriggerOptions};
+use crate::{Error, Jira, Result, TransitionOption, TransitionOptions, TransitionTriggerOptions};
 
 /// issue transition interface
 #[derive(Debug)]
