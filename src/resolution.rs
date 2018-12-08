@@ -4,7 +4,7 @@
 use std::collections::BTreeMap;
 
 // Ours
-use {Jira, Result};
+use crate::{Jira, Result};
 
 #[derive(Debug)]
 pub struct Resolution {
