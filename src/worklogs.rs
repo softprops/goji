@@ -1,4 +1,5 @@
 use url::form_urlencoded;
+use chrono::prelude::*;
 use crate::rep::{Comment, User, Visibility};
 
 // Ours
@@ -46,9 +47,9 @@ pub struct Worklog {
     #[serde(rename = "updateAuthor")]
     update_author: User,
     comment: Option<Comment>,
-    updated: String,
+    updated: DateTime<FixedOffset>,
     visibility: Option<Visibility>,
-    started: String,
+    started: DateTime<FixedOffset>,
     #[serde(rename = "timeSpent")]
     time_spent: String,
     #[serde(rename = "timeSpentSeconds")]
