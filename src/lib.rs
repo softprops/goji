@@ -19,6 +19,7 @@ use serde::Serialize;
 mod builder;
 mod errors;
 pub mod issues;
+pub mod worklogs;
 mod rep;
 mod search;
 mod transitions;
@@ -26,6 +27,7 @@ mod transitions;
 pub use crate::builder::*;
 pub use crate::errors::*;
 pub use crate::issues::*;
+pub use crate::worklogs::*;
 pub use crate::rep::*;
 pub use crate::search::Search;
 pub use crate::transitions::*;
@@ -97,6 +99,11 @@ impl Jira {
     // return issues interface
     pub fn issues(&self) -> Issues {
         Issues::new(self)
+    }
+
+    // return worklogs interface
+    pub fn worklogs(&self) -> Worklogs {
+        Worklogs::new(self)
     }
 
     // return boards interface
