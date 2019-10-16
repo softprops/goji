@@ -9,6 +9,7 @@ repository = "https://github.com/softprops/goji"
 keywords = ["hyper", "jira"]
 license = "MIT"
 readme = "README.md"
+edition = "2018"
 
 [badges]
 travis-ci = { repository = "softprops/goji" }

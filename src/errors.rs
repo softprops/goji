@@ -5,7 +5,7 @@ use serde_json::error::Error as SerdeError;
 use std::io::Error as IoError;
 
 // Ours
-use Errors;
+use crate::Errors;
 
 /// an enumeration over potential errors
 /// that may happen when sending a request to jira
@@ -47,7 +47,7 @@ impl From<IoError> for Error {
 
 impl ::std::fmt::Display for Error {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        use Error::*;
+        use crate::Error::*;
 
         match *self {
             Http(ref e) => writeln!(f, "Http Error: {}", e),
@@ -64,7 +64,7 @@ impl ::std::fmt::Display for Error {
 
 impl ::std::error::Error for Error {
     fn description(&self) -> &str {
-        use Error::*;
+        use crate::Error::*;
 
         match *self {
             Http(ref e) => e.description(),
@@ -78,7 +78,7 @@ impl ::std::error::Error for Error {
     }
 
     fn cause(&self) -> Option<&::std::error::Error> {
-        use Error::*;
+        use crate::Error::*;
 
         match *self {
             Http(ref e) => Some(e),

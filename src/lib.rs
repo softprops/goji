@@ -23,17 +23,17 @@ mod rep;
 mod search;
 mod transitions;
 
-pub use builder::*;
-pub use errors::*;
-pub use issues::*;
-pub use rep::*;
-pub use search::Search;
-pub use transitions::*;
+pub use crate::builder::*;
+pub use crate::errors::*;
+pub use crate::issues::*;
+pub use crate::rep::*;
+pub use crate::search::Search;
+pub use crate::transitions::*;
 pub mod boards;
 pub mod resolution;
-pub use boards::*;
+pub use crate::boards::*;
 pub mod sprints;
-pub use sprints::*;
+pub use crate::sprints::*;
 
 #[derive(Deserialize, Debug)]
 pub struct EmptyResponse;

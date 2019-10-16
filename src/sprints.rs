@@ -4,7 +4,7 @@
 use url::form_urlencoded;
 
 // Ours
-use {Board, EmptyResponse, Jira, Result, SearchOptions};
+use crate::{Board, EmptyResponse, Jira, Result, SearchOptions};
 
 #[derive(Debug)]
 pub struct Sprints {
