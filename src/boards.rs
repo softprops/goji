@@ -1,6 +1,7 @@
 //! Interfaces for accessing and managing boards
 
 // Third party
+use futures::executor::block_on;
 use url::form_urlencoded;
 
 // Ours
@@ -41,18 +42,20 @@ impl Boards {
     ///
     /// See this [jira docs](https://docs.atlassian.com/jira-software/REST/7.0.4/#agile/1.0/board-getBoard)
     /// for more information
-    pub fn get<I>(&self, id: I) -> Result<Board>
+    pub async fn get<I>(&self, id: I) -> Result<Board>
     where
         I: Into<String>,
     {
-        self.jira.get("agile", &format!("/board/{}", id.into()))
+        self.jira
+            .get("agile", &format!("/board/{}", id.into()))
+            .await
     }
 
     /// Returns a single page of board results
     ///
     /// See the [jira docs](https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/board-getAllBoards)
     /// for more information
-    pub fn list(&self, options: &SearchOptions) -> Result<BoardResults> {
+    pub async fn list(&self, options: &SearchOptions) -> Result<BoardResults> {
         let mut path = vec!["/board".to_owned()];
         let query_options = options.serialize().unwrap_or_default();
         let query = form_urlencoded::Serializer::new(query_options).finish();
@@ -61,6 +64,7 @@ impl Boards {
 
         self.jira
             .get::<BoardResults>("agile", path.join("?").as_ref())
+            .await
     }
 
     /// Returns a type which may be used to iterate over consecutive pages of results
@@ -82,7 +86,7 @@ pub struct BoardsIter<'a> {
 
 impl<'a> BoardsIter<'a> {
     fn new(options: &'a SearchOptions, jira: &Jira) -> Result<Self> {
-        let results = jira.boards().list(options)?;
+        let results = block_on(jira.boards().list(options))?;
         Ok(BoardsIter {
             jira: jira.clone(),
             results,
@@ -100,13 +104,15 @@ impl<'a> Iterator for BoardsIter<'a> {
     fn next(&mut self) -> Option<Board> {
         self.results.values.pop().or_else(|| {
             if self.more() {
-                match self.jira.boards().list(
-                    &self
-                        .search_options
-                        .as_builder()
-                        .max_results(self.results.max_results)
-                        .start_at(self.results.start_at + self.results.max_results)
-                        .build(),
+                match block_on(
+                    self.jira.boards().list(
+                        &self
+                            .search_options
+                            .as_builder()
+                            .max_results(self.results.max_results)
+                            .start_at(self.results.start_at + self.results.max_results)
+                            .build(),
+                    ),
                 ) {
                     Ok(new_results) => {
                         self.results = new_results;

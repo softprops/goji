@@ -1,6 +1,7 @@
 //! Interfaces for searching for issues
 
 // Third party
+use futures::executor::block_on;
 use url::form_urlencoded;
 
 // Ours
@@ -21,7 +22,7 @@ impl Search {
     ///
     /// See the [jira docs](https://docs.atlassian.com/jira/REST/latest/#api/2/search)
     /// for more information
-    pub fn list<J>(&self, jql: J, options: &SearchOptions) -> Result<SearchResults>
+    pub async fn list<J>(&self, jql: J, options: &SearchOptions) -> Result<SearchResults>
     where
         J: Into<String>,
     {
@@ -33,6 +34,7 @@ impl Search {
         path.push(query);
         self.jira
             .get::<SearchResults>("api", path.join("?").as_ref())
+            .await
     }
 
     /// Return a type which may be used to iterate over consecutive pages of results
@@ -62,7 +64,7 @@ impl<'a> Iter<'a> {
         J: Into<String>,
     {
         let query = jql.into();
-        let results = jira.search().list(query.clone(), options)?;
+        let results = block_on(jira.search().list(query.clone(), options))?;
         Ok(Iter {
             jira: jira.clone(),
             jql: query,
@@ -81,14 +83,16 @@ impl<'a> Iterator for Iter<'a> {
     fn next(&mut self) -> Option<Issue> {
         self.results.issues.pop().or_else(|| {
             if self.more() {
-                match self.jira.search().list(
-                    self.jql.clone(),
-                    &self
-                        .search_options
-                        .as_builder()
-                        .max_results(self.results.max_results)
-                        .start_at(self.results.start_at + self.results.max_results)
-                        .build(),
+                match block_on(
+                    self.jira.search().list(
+                        self.jql.clone(),
+                        &self
+                            .search_options
+                            .as_builder()
+                            .max_results(self.results.max_results)
+                            .start_at(self.results.start_at + self.results.max_results)
+                            .build(),
+                    ),
                 ) {
                     Ok(new_results) => {
                         self.results = new_results;

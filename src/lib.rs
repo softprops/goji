@@ -9,8 +9,6 @@ extern crate serde_derive;
 extern crate serde_json;
 extern crate url;
 
-use std::io::Read;
-
 use reqwest::header::CONTENT_TYPE;
 use reqwest::{Client, Method, StatusCode};
 use serde::de::DeserializeOwned;
@@ -109,7 +107,7 @@ impl Jira {
         Sprints::new(self)
     }
 
-    fn post<D, S>(&self, api_name: &str, endpoint: &str, body: S) -> Result<D>
+    async fn post<D, S>(&self, api_name: &str, endpoint: &str, body: S) -> Result<D>
     where
         D: DeserializeOwned,
         S: Serialize,
@@ -117,16 +115,18 @@ impl Jira {
         let data = serde_json::to_string::<S>(&body)?;
         debug!("Json request: {}", data);
         self.request::<D>(Method::POST, api_name, endpoint, Some(data.into_bytes()))
+            .await
     }
 
-    fn get<D>(&self, api_name: &str, endpoint: &str) -> Result<D>
+    async fn get<D>(&self, api_name: &str, endpoint: &str) -> Result<D>
     where
         D: DeserializeOwned,
     {
         self.request::<D>(Method::GET, api_name, endpoint, None)
+            .await
     }
 
-    fn request<D>(
+    async fn request<D>(
         &self,
         method: Method,
         api_name: &str,
@@ -146,20 +146,20 @@ impl Jira {
                 .header(CONTENT_TYPE, "application/json"),
         };
 
-        let mut res = match body {
-            Some(bod) => builder.body(bod).send()?,
-            _ => builder.send()?,
+        let res = match body {
+            Some(bod) => builder.body(bod).send().await?,
+            _ => builder.send().await?,
         };
 
-        let mut body = String::new();
-        res.read_to_string(&mut body)?;
-        debug!("status {:?} body '{:?}'", res.status(), body);
-        match res.status() {
+        let status = res.status();
+        let body = res.text().await?;
+        debug!("status {:?} body '{:?}'", status, body);
+        match status {
             StatusCode::UNAUTHORIZED => Err(Error::Unauthorized),
             StatusCode::METHOD_NOT_ALLOWED => Err(Error::MethodNotAllowed),
             StatusCode::NOT_FOUND => Err(Error::NotFound),
             client_err if client_err.is_client_error() => Err(Error::Fault {
-                code: res.status(),
+                code: status,
                 errors: serde_json::from_str::<Errors>(&body)?,
             }),
             _ => {

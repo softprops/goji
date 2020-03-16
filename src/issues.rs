@@ -1,6 +1,7 @@
 //! Interfaces for accessing and managing issues
 
 // Third party
+use futures::executor::block_on;
 use url::form_urlencoded;
 
 // Ours
@@ -80,19 +81,19 @@ impl Issues {
         Issues { jira: jira.clone() }
     }
 
-    pub fn get<I>(&self, id: I) -> Result<Issue>
+    pub async fn get<I>(&self, id: I) -> Result<Issue>
     where
         I: Into<String>,
     {
-        self.jira.get("api", &format!("/issue/{}", id.into()))
+        self.jira.get("api", &format!("/issue/{}", id.into())).await
     }
-    pub fn create(&self, data: CreateIssue) -> Result<CreateResponse> {
-        self.jira.post("api", "/issue", data)
+    pub async fn create(&self, data: CreateIssue) -> Result<CreateResponse> {
+        self.jira.post("api", "/issue", data).await
     }
 
     /// returns a single page of issues results
     /// https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/board-getIssuesForBoard
-    pub fn list(&self, board: &Board, options: &SearchOptions) -> Result<IssueResults> {
+    pub async fn list(&self, board: &Board, options: &SearchOptions) -> Result<IssueResults> {
         let mut path = vec![format!("/board/{}/issue", board.id)];
         let query_options = options.serialize().unwrap_or_default();
         let query = form_urlencoded::Serializer::new(query_options).finish();
@@ -101,6 +102,7 @@ impl Issues {
 
         self.jira
             .get::<IssueResults>("agile", path.join("?").as_ref())
+            .await
     }
 
     /// runs a type why may be used to iterate over consecutive pages of results
@@ -121,7 +123,7 @@ pub struct IssuesIter<'a> {
 
 impl<'a> IssuesIter<'a> {
     fn new(board: &'a Board, options: &'a SearchOptions, jira: &Jira) -> Result<Self> {
-        let results = jira.issues().list(board, options)?;
+        let results = block_on(jira.issues().list(board, options))?;
         Ok(IssuesIter {
             board,
             jira: jira.clone(),
@@ -140,14 +142,16 @@ impl<'a> Iterator for IssuesIter<'a> {
     fn next(&mut self) -> Option<Issue> {
         self.results.issues.pop().or_else(|| {
             if self.more() {
-                match self.jira.issues().list(
-                    self.board,
-                    &self
-                        .search_options
-                        .as_builder()
-                        .max_results(self.results.max_results)
-                        .start_at(self.results.start_at + self.results.max_results)
-                        .build(),
+                match block_on(
+                    self.jira.issues().list(
+                        self.board,
+                        &self
+                            .search_options
+                            .as_builder()
+                            .max_results(self.results.max_results)
+                            .start_at(self.results.start_at + self.results.max_results)
+                            .build(),
+                    ),
                 ) {
                     Ok(new_results) => {
                         self.results = new_results;

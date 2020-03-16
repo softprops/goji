@@ -27,10 +27,12 @@ impl Resolution {
         Resolution { jira: jira.clone() }
     }
 
-    pub fn get<I>(&self, id: I) -> Result<Resolved>
+    pub async fn get<I>(&self, id: I) -> Result<Resolved>
     where
         I: Into<String>,
     {
-        self.jira.get("api", &format!("/resolution/{}", id.into()))
+        self.jira
+            .get("api", &format!("/resolution/{}", id.into()))
+            .await
     }
 }

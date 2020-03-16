@@ -1,6 +1,7 @@
 extern crate env_logger;
 extern crate goji;
 
+use futures::executor::block_on;
 use goji::{Credentials, Jira, TransitionTriggerOptions};
 use std::env;
 
@@ -14,15 +15,13 @@ fn main() {
     ) {
         let jira = Jira::new(host, Credentials::Basic(user, pass)).unwrap();
 
-        println!("{:#?}", jira.issues().get(key.clone()));
+        println!("{:#?}", block_on(jira.issues().get(key.clone())));
         let transitions = jira.transitions(key);
-        for option in transitions.list() {
+        for option in block_on(transitions.list()) {
             println!("{:#?}", option);
         }
         if let Ok(transition_id) = env::var("JIRA_TRANSITION_ID") {
-            transitions
-                .trigger(TransitionTriggerOptions::new(transition_id))
-                .unwrap()
+            block_on(transitions.trigger(TransitionTriggerOptions::new(transition_id))).unwrap()
         }
     }
 }

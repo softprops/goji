@@ -22,24 +22,26 @@ impl Transitions {
     }
 
     /// return list of transitions options for this issue
-    pub fn list(&self) -> Result<Vec<TransitionOption>> {
+    pub async fn list(&self) -> Result<Vec<TransitionOption>> {
         self.jira
             .get::<TransitionOptions>(
                 "api",
                 &format!("/issue/{}/transitions?expand=transitions.fields", self.key),
             )
+            .await
             .map(|wrapper| wrapper.transitions)
     }
 
     /// trigger a issue transition
     /// to transition with a resolution use TransitionTrigger::builder(id).resolution(name)
-    pub fn trigger(&self, trans: TransitionTriggerOptions) -> Result<()> {
+    pub async fn trigger(&self, trans: TransitionTriggerOptions) -> Result<()> {
         self.jira
             .post::<(), TransitionTriggerOptions>(
                 "api",
                 &format!("/issue/{}/transitions", self.key),
                 trans,
             )
+            .await
             .or_else(|e| match e {
                 Error::Serde(_) => Ok(()),
                 e => Err(e),
