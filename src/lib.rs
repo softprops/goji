@@ -12,7 +12,7 @@ extern crate url;
 use std::io::Read;
 
 use reqwest::header::CONTENT_TYPE;
-use reqwest::{Client, Method, StatusCode};
+use reqwest::{blocking::Client, Method, StatusCode};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 
