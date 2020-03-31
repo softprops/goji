@@ -12,7 +12,7 @@ extern crate url;
 use std::io::Read;
 
 use reqwest::header::CONTENT_TYPE;
-use reqwest::{blocking::Client, Method, StatusCode};
+use reqwest::{blocking::{Client, RequestBuilder}, Method, StatusCode};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 
@@ -45,8 +45,21 @@ pub type Result<T> = std::result::Result<T, Error>;
 /// Types of authentication credentials
 #[derive(Clone, Debug)]
 pub enum Credentials {
+    /// Use no authentication
+    Anonymous,
     /// username and password credentials
     Basic(String, String), // todo: OAuth
+}
+
+impl Credentials {
+    fn apply(&self, request: RequestBuilder) -> RequestBuilder {
+        match self {
+            Credentials::Anonymous => request,
+            Credentials::Basic(ref user, ref pass) => {
+                request.basic_auth(user.to_owned(), Some(pass.to_owned()))
+            },
+        }
+    }
 }
 
 /// Entrypoint into client interface
@@ -155,17 +168,17 @@ impl Jira {
         let url = format!("{}/rest/{}/latest{}", self.host, api_name, endpoint);
         debug!("url -> {:?}", url);
 
-        let req = self.client.request(method, &url);
-        let builder = match self.credentials {
-            Credentials::Basic(ref user, ref pass) => req
-                .basic_auth(user.to_owned(), Some(pass.to_owned()))
-                .header(CONTENT_TYPE, "application/json"),
-        };
+        let mut req = self.client
+            .request(method, &url)
+            .header(CONTENT_TYPE, "application/json");
 
-        let mut res = match body {
-            Some(bod) => builder.body(bod).send()?,
-            _ => builder.send()?,
-        };
+        req = self.credentials.apply(req);
+
+        if let Some(body) = body {
+            req = req.body(body);
+        }
+
+        let mut res = req.send()?;
 
         let mut body = String::new();
         res.read_to_string(&mut body)?;
