@@ -32,7 +32,7 @@ impl Versions {
     ///
     /// See [jira docs](https://developer.atlassian.com/cloud/jira/platform/rest/v2/#api-rest-api-2-version-id-put)
     /// for more information
-    pub fn release_version(
+    pub fn release(
         &self,
         version: &Version,
         move_unfixed_issues_to: Option<&Version>,
