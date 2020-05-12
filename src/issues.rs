@@ -56,6 +56,11 @@ pub struct CreateIssue {
     pub fields: Fields,
 }
 
+#[derive(Serialize, Debug)]
+pub struct CreateCustomIssue<CustomFields> {
+    pub fields: CustomFields
+}
+
 #[derive(Debug, Deserialize)]
 pub struct CreateResponse {
     pub id: String,
@@ -86,7 +91,12 @@ impl Issues {
     {
         self.jira.get("api", &format!("/issue/{}", id.into()))
     }
+    
     pub fn create(&self, data: CreateIssue) -> Result<CreateResponse> {
+        self.jira.post("api", "/issue", data)
+    }
+
+    pub fn create_from_custom_issue<T: serde::Serialize>(&self, data: CreateCustomIssue<T>) -> Result<CreateResponse> {
         self.jira.post("api", "/issue", data)
     }
 
