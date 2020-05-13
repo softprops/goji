@@ -1,4 +1,6 @@
-use crate::{Error, Jira, Result, Version, VersionCreationBody, VersionUpdateBody};
+use crate::{
+    Error, Jira, Result, Version, VersionCreationBody, VersionMoveAfterBody, VersionUpdateBody,
+};
 
 pub struct Versions {
     jira: Jira,
@@ -26,6 +28,20 @@ impl Versions {
         let name = name.into();
         self.jira
             .post("api", "/version", VersionCreationBody { project_id, name })
+    }
+
+    /// Move a version after another version
+    ///
+    /// See [jira docs](https://developer.atlassian.com/cloud/jira/platform/rest/v2/#api-rest-api-2-version-id-move-post)
+    /// for more information
+    pub fn move_after<T: Into<String>>(&self, version: &Version, after: T) -> Result<Version> {
+        self.jira.post(
+            "api",
+            &format!("/version/{}/move", version.id),
+            VersionMoveAfterBody {
+                after: after.into(),
+            },
+        )
     }
 
     /// Release a new version: modify the version by turning the released boolean to true
