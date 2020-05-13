@@ -252,9 +252,31 @@ pub struct Version {
     pub archived: bool,
     pub id: String,
     pub name: String,
+    #[serde(rename = "projectId")]
+    pub project_id: u64,
     pub released: bool,
     #[serde(rename = "self")]
     pub self_link: String,
+}
+
+#[derive(Serialize, Debug)]
+pub struct VersionCreationBody {
+    pub name: String,
+    #[serde(rename = "projectId")]
+    pub project_id: u64,
+}
+
+#[derive(Serialize, Debug)]
+pub struct VersionMoveAfterBody {
+    pub after: String,
+}
+
+#[derive(Serialize, Debug)]
+pub struct VersionUpdateBody {
+    pub released: bool,
+    pub archived: bool,
+    #[serde(rename = "moveUnfixedIssuesTo")]
+    pub move_unfixed_issues_to: Option<String>,
 }
 
 #[derive(Deserialize, Debug, Clone)]

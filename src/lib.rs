@@ -22,6 +22,7 @@ pub mod issues;
 mod rep;
 mod search;
 mod transitions;
+mod versions;
 
 pub use crate::builder::*;
 pub use crate::errors::*;
@@ -34,6 +35,7 @@ pub mod resolution;
 pub use crate::boards::*;
 pub mod sprints;
 pub use crate::sprints::*;
+pub use crate::versions::*;
 
 #[derive(Deserialize, Debug)]
 pub struct EmptyResponse;
@@ -109,14 +111,28 @@ impl Jira {
         Sprints::new(self)
     }
 
+    pub fn versions(&self) -> Versions {
+        Versions::new(self)
+    }
+
     fn post<D, S>(&self, api_name: &str, endpoint: &str, body: S) -> Result<D>
     where
         D: DeserializeOwned,
         S: Serialize,
     {
         let data = serde_json::to_string::<S>(&body)?;
-        debug!("Json request: {}", data);
+        debug!("Json POST request: {}", data);
         self.request::<D>(Method::POST, api_name, endpoint, Some(data.into_bytes()))
+    }
+
+    fn put<D, S>(&self, api_name: &str, endpoint: &str, body: S) -> Result<D>
+    where
+        D: DeserializeOwned,
+        S: Serialize,
+    {
+        let data = serde_json::to_string::<S>(&body)?;
+        debug!("Json PUT request: {}", data);
+        self.request::<D>(Method::PUT, api_name, endpoint, Some(data.into_bytes()))
     }
 
     fn get<D>(&self, api_name: &str, endpoint: &str) -> Result<D>
