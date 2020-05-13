@@ -265,6 +265,12 @@ pub struct VersionCreationBody {
     #[serde(rename = "projectId")]
     pub project_id: u64,
 }
+
+#[derive(Serialize, Debug)]
+pub struct VersionMoveAfterBody {
+    pub after: String,
+}
+
 #[derive(Serialize, Debug)]
 pub struct VersionUpdateBody {
     pub released: bool,
