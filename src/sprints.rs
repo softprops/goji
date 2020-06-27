@@ -49,8 +49,32 @@ impl Sprints {
         Sprints { jira: jira.clone() }
     }
 
-    /// returns a single page of board results
-    /// https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/board/{boardId}/sprint-getAllSprints
+    /// Get a single sprint
+    ///
+    /// See this [jira docs](https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/sprint-getSprint)
+    /// for more information
+    pub fn get<I>(&self, id: I) -> Result<Sprint>
+    where
+        I: Into<String>,
+    {
+        self.jira.get("agile", &format!("/sprint/{}", id.into()))
+    }
+
+    /// Move issues into a sprint
+    ///
+    /// See this [jira docs](https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/sprint-moveIssuesToSprint)
+    /// for more information
+    pub fn move_issues(&self, sprint_id: u64, issues: Vec<String>) -> Result<EmptyResponse> {
+        let path = format!("/sprint/{}/issue", sprint_id);
+        let data = MoveIssues { issues };
+
+        self.jira.post("agile", &path, data)
+    }
+
+    /// Returns a single page of sprint results
+    ///
+    /// See this [jira docs](https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/board/{boardId}/sprint-getAllSprints)
+    /// for more information
     pub fn list(&self, board: &Board, options: &SearchOptions) -> Result<SprintResults> {
         let mut path = vec![format!("/board/{}/sprint", board.id)];
         let query_options = options.serialize().unwrap_or_default();
@@ -62,24 +86,10 @@ impl Sprints {
             .get::<SprintResults>("agile", path.join("?").as_ref())
     }
 
-    /// move issues into sprint
-    /// https://docs.atlassian.com/jira-software/REST/7.3.1/#agile/1.0/sprint-moveIssuesToSprint
-    pub fn move_issues(&self, sprint_id: u64, issues: Vec<String>) -> Result<EmptyResponse> {
-        let path = format!("/sprint/{}/issue", sprint_id);
-        let data = MoveIssues { issues };
-
-        self.jira.post("agile", &path, data)
-    }
-    /// returns a single sprint data
-    /// https://docs.atlassian.com/jira-software/REST/7.3.1/#agile/1.0/sprint-getSprint
-    pub fn get(&self, sprint_id: u64) -> Result<Sprint> {
-        let path = format!("/sprint/{}", sprint_id);
-
-        self.jira.get::<Sprint>("agile", &path)
-    }
-
-    /// runs a type why may be used to iterate over consecutive pages of results
-    /// https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/board-getAllBoards
+    /// Returns a type which may be used to iterate over consecutive pages of results
+    ///
+    /// See this [jira docs](https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/board/{boardId}/sprint-getAllSprints)
+    /// for more information
     pub fn iter<'a>(
         &self,
         board: &'a Board,
@@ -89,7 +99,7 @@ impl Sprints {
     }
 }
 
-/// provides an iterator over multiple pages of search results
+/// Provides an iterator over multiple pages of search results
 #[derive(Debug)]
 pub struct SprintsIter<'a> {
     jira: Jira,

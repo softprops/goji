@@ -1,12 +1,14 @@
 //! Interfaces for accessing and managing issues
 
 // Third party
+use serde::Serialize;
+use std::collections::BTreeMap;
 use url::form_urlencoded;
 
 // Ours
 use crate::{Board, Comment, Issue, Jira, Result, SearchOptions};
 
-/// issue options
+/// Issue options
 #[derive(Debug)]
 pub struct Issues {
     jira: Jira,
@@ -69,9 +71,14 @@ pub struct CreateResponse {
     pub url: String,
 }
 
+#[derive(Serialize, Debug)]
+pub struct EditIssue<T: Serialize> {
+    pub fields: BTreeMap<String, T>,
+}
+
 #[derive(Deserialize, Debug)]
 pub struct IssueResults {
-    pub expand: String,
+    pub expand: Option<String>,
     #[serde(rename = "maxResults")]
     pub max_results: u64,
     #[serde(rename = "startAt")]
@@ -90,26 +97,41 @@ impl Issues {
         Issues { jira: jira.clone() }
     }
 
+    /// Get a single issue
+    ///
+    /// See this [jira docs](https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/issue)
+    /// for more information
     pub fn get<I>(&self, id: I) -> Result<Issue>
     where
         I: Into<String>,
     {
-        self.jira.get("api", &format!("/issue/{}", id.into()))
+        self.jira.get("agile", &format!("/issue/{}", id.into()))
     }
 
+    /// Create a new issue
+    ///
+    /// See this [jira docs](https://docs.atlassian.com/software/jira/docs/api/REST/latest/#api/2/issue-createIssue)
+    /// for more information
     pub fn create(&self, data: CreateIssue) -> Result<CreateResponse> {
         self.jira.post("api", "/issue", data)
     }
 
-    pub fn create_from_custom_issue<T: serde::Serialize>(
-        &self,
-        data: CreateCustomIssue<T>,
-    ) -> Result<CreateResponse> {
-        self.jira.post("api", "/issue", data)
+    /// Edit an issue
+    ///
+    /// See this [jira docs](https://docs.atlassian.com/software/jira/docs/api/REST/latest/#api/2/issue-editIssue)
+    /// for more information
+    pub fn edit<I, T>(&self, id: I, data: EditIssue<T>) -> Result<()>
+    where
+        I: Into<String>,
+        T: Serialize,
+    {
+        self.jira.put("api", &format!("/issue/{}", id.into()), data)
     }
 
-    /// returns a single page of issues results
-    /// https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/board-getIssuesForBoard
+    /// Returns a single page of issue results
+    ///
+    /// See this [jira docs](https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/board-getIssuesForBoard)
+    /// for more information
     pub fn list(&self, board: &Board, options: &SearchOptions) -> Result<IssueResults> {
         let mut path = vec![format!("/board/{}/issue", board.id)];
         let query_options = options.serialize().unwrap_or_default();
@@ -121,8 +143,10 @@ impl Issues {
             .get::<IssueResults>("agile", path.join("?").as_ref())
     }
 
-    /// runs a type why may be used to iterate over consecutive pages of results
-    /// https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/board-getIssuesForBoard
+    /// Returns a type which may be used to iterate over consecutive pages of results
+    ///
+    /// See this [jira docs](https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/board-getIssuesForBoard)
+    /// for more information
     pub fn iter<'a>(&self, board: &'a Board, options: &'a SearchOptions) -> Result<IssuesIter<'a>> {
         IssuesIter::new(board, options, &self.jira)
     }
@@ -139,7 +163,7 @@ impl Issues {
     }
 }
 
-/// provides an iterator over multiple pages of search results
+/// Provides an iterator over multiple pages of search results
 #[derive(Debug)]
 pub struct IssuesIter<'a> {
     jira: Jira,

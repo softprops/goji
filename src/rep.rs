@@ -7,7 +7,7 @@ use std::collections::BTreeMap;
 // Ours
 use crate::{Jira, Result};
 
-/// represents an general jira error response
+/// Represents an general jira error response
 #[derive(Deserialize, Debug)]
 pub struct Errors {
     #[serde(rename = "errorMessages")]
@@ -15,7 +15,7 @@ pub struct Errors {
     pub errors: BTreeMap<String, String>,
 }
 
-/// represents a single jira issue
+/// Represents a single jira issue
 #[derive(Deserialize, Debug, Clone)]
 pub struct Issue {
     #[serde(rename = "self")]
@@ -27,7 +27,7 @@ pub struct Issue {
 }
 
 impl Issue {
-    /// resolves a typed field from an issues lists of arbitrary fields
+    /// Resolves a typed field from an issues lists of arbitrary fields
     pub fn field<F>(&self, name: &str) -> Option<Result<F>>
     where
         for<'de> F: Deserialize<'de>,
@@ -45,43 +45,43 @@ impl Issue {
         self.field::<String>(name)
     }
 
-    /// user assigned to issue
+    /// User assigned to issue
     pub fn assignee(&self) -> Option<User> {
         self.user_field("assignee").and_then(|value| value.ok())
     }
 
-    /// user that created the issue
+    /// User that created the issue
     pub fn creator(&self) -> Option<User> {
         self.user_field("creator").and_then(|value| value.ok())
     }
 
-    /// user that reported the issue
+    /// User that reported the issue
     pub fn reporter(&self) -> Option<User> {
         self.user_field("reporter").and_then(|value| value.ok())
     }
 
-    /// the current status of the issue
+    /// The current status of the issue
     pub fn status(&self) -> Option<Status> {
         self.field::<Status>("status").and_then(|value| value.ok())
     }
 
-    /// brief summary of the issue
+    /// Brief summary of the issue
     pub fn summary(&self) -> Option<String> {
         self.string_field("summary").and_then(|value| value.ok())
     }
 
-    /// description of the issue
+    /// Description of the issue
     pub fn description(&self) -> Option<String> {
         self.string_field("description")
             .and_then(|value| value.ok())
     }
 
-    /// updated timestamp
+    /// Updated timestamp
     pub fn updated(&self) -> Option<String> {
         self.string_field("updated").and_then(|value| value.ok())
     }
 
-    /// created timestamp
+    /// Created timestamp
     pub fn created(&self) -> Option<String> {
         self.string_field("created").and_then(|value| value.ok())
     }
@@ -91,33 +91,33 @@ impl Issue {
             .and_then(|value| value.ok())
     }
 
-    /// an issue type
+    /// An issue type
     pub fn issue_type(&self) -> Option<IssueType> {
         self.field::<IssueType>("issuetype")
             .and_then(|value| value.ok())
     }
 
-    /// labels associated with the issue
+    /// Labels associated with the issue
     pub fn labels(&self) -> Vec<String> {
         self.field::<Vec<String>>("labels")
             .and_then(|value| value.ok())
             .unwrap_or_default()
     }
 
-    /// list of versions associated with the issue
+    /// List of versions associated with the issue
     pub fn fix_versions(&self) -> Vec<Version> {
         self.field::<Vec<Version>>("fixVersions")
             .and_then(|value| value.ok())
             .unwrap_or_default()
     }
 
-    /// priority of the issue
+    /// Priority of the issue
     pub fn priority(&self) -> Option<Priority> {
         self.field::<Priority>("priority")
             .and_then(|value| value.ok())
     }
 
-    /// links to other issues
+    /// Links to other issues
     pub fn links(&self) -> Option<Result<Vec<IssueLink>>> {
         self.field::<Vec<IssueLink>>("issuelinks") //.and_then(|value| value.ok()).unwrap_or(vec![])
     }
@@ -143,6 +143,15 @@ impl Issue {
             .and_then(|value| value.ok())
             .map(|value| value.comments)
             .unwrap_or_default()
+    }
+
+    pub fn parent(&self) -> Option<Issue> {
+        self.field::<Issue>("parent").and_then(|value| value.ok())
+    }
+
+    pub fn timetracking(&self) -> Option<TimeTracking> {
+        self.field::<TimeTracking>("timetracking")
+            .and_then(|value| value.ok())
     }
 
     pub fn permalink(&self, jira: &Jira) -> String {
@@ -227,7 +236,7 @@ pub struct Project {
     pub name: String,
 }
 
-/// represents link relationship between issues
+/// Represents link relationship between issues
 #[derive(Deserialize, Debug)]
 pub struct IssueLink {
     pub id: String,
@@ -241,7 +250,7 @@ pub struct IssueLink {
     pub link_type: LinkType,
 }
 
-/// represents type of issue relation
+/// Represents type of issue relation
 #[derive(Deserialize, Debug)]
 pub struct LinkType {
     pub id: String,
@@ -294,7 +303,6 @@ pub struct User {
     #[serde(rename = "emailAddress")]
     pub email_address: String,
     pub key: Option<String>,
-    pub name: String,
     #[serde(rename = "self")]
     pub self_link: String,
     #[serde(rename = "timeZone")]
@@ -345,6 +353,17 @@ pub struct SearchResults {
 }
 
 #[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct TimeTracking {
+    pub original_estimate: Option<String>,
+    pub original_estimate_seconds: Option<u64>,
+    pub remaining_estimate: Option<String>,
+    pub remaining_estimate_seconds: Option<u64>,
+    pub time_spent: Option<String>,
+    pub time_spent_seconds: Option<u64>,
+}
+
+#[derive(Deserialize, Debug)]
 pub struct TransitionOption {
     pub id: String,
     pub name: String,
@@ -357,7 +376,7 @@ pub struct TransitionTo {
     pub id: String,
 }
 
-/// contains list of options an issue can transitions through
+/// Contains list of options an issue can transitions through
 #[derive(Deserialize, Debug)]
 pub struct TransitionOptions {
     pub transitions: Vec<TransitionOption>,
@@ -370,7 +389,7 @@ pub struct TransitionTriggerOptions {
 }
 
 impl TransitionTriggerOptions {
-    /// creates a new instance
+    /// Creates a new instance
     pub fn new<I>(id: I) -> TransitionTriggerOptions
     where
         I: Into<String>,
@@ -395,7 +414,7 @@ pub struct TransitionTriggerOptionsBuilder {
 }
 
 impl TransitionTriggerOptionsBuilder {
-    /// creates a new instance
+    /// Creates a new instance
     pub fn new<I>(id: I) -> TransitionTriggerOptionsBuilder
     where
         I: Into<String>,
@@ -406,7 +425,7 @@ impl TransitionTriggerOptionsBuilder {
         }
     }
 
-    /// appends a field to update as part of transition
+    /// Appends a field to update as part of transition
     pub fn field<N, V>(&mut self, name: N, value: V) -> &mut TransitionTriggerOptionsBuilder
     where
         N: Into<String>,
@@ -419,7 +438,7 @@ impl TransitionTriggerOptionsBuilder {
         self
     }
 
-    /// updates resolution in transition
+    /// Updates resolution in transition
     pub fn resolution<R>(&mut self, name: R) -> &mut TransitionTriggerOptionsBuilder
     where
         R: Into<String>,

@@ -2,19 +2,19 @@
 use std::collections::HashMap;
 use url::form_urlencoded;
 
-/// options availble for search
+/// Options availble for search
 #[derive(Default, Clone, Debug)]
 pub struct SearchOptions {
     params: HashMap<&'static str, String>,
 }
 
 impl SearchOptions {
-    /// return a new instance of a builder for options
+    /// Return a new instance of a builder for options
     pub fn builder() -> SearchOptionsBuilder {
         SearchOptionsBuilder::new()
     }
 
-    /// serialize options as a string. returns None if no options are defined
+    /// Serialize options as a string. returns None if no options are defined
     pub fn serialize(&self) -> Option<String> {
         if self.params.is_empty() {
             None
@@ -32,8 +32,8 @@ impl SearchOptions {
     }
 }
 
-/// a builder interface for search option
-/// Typically this is initialized with SearchOptions::builder()
+/// A builder interface for search option. Typically this
+/// is initialized with SearchOptions::builder()
 #[derive(Default, Debug)]
 pub struct SearchOptionsBuilder {
     params: HashMap<&'static str, String>,

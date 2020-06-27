@@ -3,7 +3,7 @@
 // Ours
 use crate::{Error, Jira, Result, TransitionOption, TransitionOptions, TransitionTriggerOptions};
 
-/// issue transition interface
+/// Issue transition interface
 #[derive(Debug)]
 pub struct Transitions {
     jira: Jira,
@@ -21,7 +21,7 @@ impl Transitions {
         }
     }
 
-    /// return list of transitions options for this issue
+    /// Return list of transitions options for this issue
     pub fn list(&self) -> Result<Vec<TransitionOption>> {
         self.jira
             .get::<TransitionOptions>(
@@ -31,8 +31,8 @@ impl Transitions {
             .map(|wrapper| wrapper.transitions)
     }
 
-    /// trigger a issue transition
-    /// to transition with a resolution use TransitionTrigger::builder(id).resolution(name)
+    /// Trigger a issue transition to transition with a resolution
+    /// use TransitionTrigger::builder(id).resolution(name)
     pub fn trigger(&self, trans: TransitionTriggerOptions) -> Result<()> {
         self.jira
             .post::<(), TransitionTriggerOptions>(

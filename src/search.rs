@@ -47,7 +47,7 @@ impl Search {
     }
 }
 
-/// provides an iterator over multiple pages of search results
+/// Provides an iterator over multiple pages of search results
 #[derive(Debug)]
 pub struct Iter<'a> {
     jira: Jira,
