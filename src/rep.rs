@@ -8,7 +8,7 @@ use std::collections::BTreeMap;
 use crate::{Jira, Result};
 
 /// Represents an general jira error response
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Errors {
     #[serde(rename = "errorMessages")]
     pub error_messages: Vec<String>,
@@ -16,7 +16,7 @@ pub struct Errors {
 }
 
 /// Represents a single jira issue
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Issue {
     #[serde(rename = "self")]
     pub self_link: String,
@@ -163,9 +163,21 @@ impl Issue {
             .unwrap()
             .to_string()
     }
+
+    pub fn try_from_custom_issue<S: serde::Serialize>(
+        custom_issue: &S,
+    ) -> serde_json::Result<Self> {
+        let serialized_data = serde_json::to_string(custom_issue)?;
+        Ok(serde_json::from_str(&serialized_data)?)
+    }
+
+    pub fn try_to_custom_issue<'de, D: serde::Deserialize<'de>>(&self) -> serde_json::Result<Self> {
+        let serialized_data = serde_json::to_string(self)?;
+        Ok(serde_json::from_str(&serialized_data)?)
+    }
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Attachment {
     pub id: String,
     #[serde(rename = "self")]
@@ -180,12 +192,12 @@ pub struct Attachment {
     pub thumbnail: Option<String>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Comments {
     pub comments: Vec<Comment>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Comment {
     pub id: Option<String>,
     #[serde(rename = "self")]
@@ -199,26 +211,26 @@ pub struct Comment {
     pub visibility: Option<Visibility>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Visibility {
     #[serde(rename = "type")]
     pub visibility_type: String,
     pub value: String,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Changelog {
     pub histories: Vec<History>,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct History {
     pub author: User,
     pub created: String,
     pub items: Vec<HistoryItem>,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct HistoryItem {
     pub field: String,
     pub from: Option<String>,
@@ -229,7 +241,7 @@ pub struct HistoryItem {
     pub to_string: Option<String>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Project {
     pub id: String,
     pub key: String,
@@ -237,7 +249,7 @@ pub struct Project {
 }
 
 /// Represents link relationship between issues
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct IssueLink {
     pub id: String,
     #[serde(rename = "self")]
@@ -251,7 +263,7 @@ pub struct IssueLink {
 }
 
 /// Represents type of issue relation
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct LinkType {
     pub id: String,
     pub inward: String,
@@ -261,7 +273,7 @@ pub struct LinkType {
     pub self_link: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Version {
     pub archived: bool,
     pub id: String,
@@ -293,7 +305,7 @@ pub struct VersionUpdateBody {
     pub move_unfixed_issues_to: Option<String>,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct User {
     pub active: bool,
     #[serde(rename = "avatarUrls")]
@@ -309,7 +321,7 @@ pub struct User {
     pub timezone: Option<String>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Status {
     pub description: String,
     #[serde(rename = "iconUrl")]
@@ -320,7 +332,7 @@ pub struct Status {
     pub self_link: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Priority {
     pub icon_url: String,
     pub id: String,
@@ -329,7 +341,7 @@ pub struct Priority {
     pub self_link: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct IssueType {
     pub description: String,
     #[serde(rename = "iconUrl")]
@@ -341,7 +353,7 @@ pub struct IssueType {
     pub subtask: bool,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct SearchResults {
     pub total: u64,
     #[serde(rename = "maxResults")]
@@ -352,7 +364,7 @@ pub struct SearchResults {
     pub issues: Vec<Issue>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct TimeTracking {
     pub original_estimate: Option<String>,
@@ -363,21 +375,21 @@ pub struct TimeTracking {
     pub time_spent_seconds: Option<u64>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct TransitionOption {
     pub id: String,
     pub name: String,
     pub to: TransitionTo,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct TransitionTo {
     pub name: String,
     pub id: String,
 }
 
 /// Contains list of options an issue can transitions through
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct TransitionOptions {
     pub transitions: Vec<TransitionOption>,
 }
