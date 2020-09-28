@@ -15,7 +15,7 @@ fn deserialise_issue_results() {
 
     let results: IssueResults = serde_json::from_str(issue_results_str).unwrap();
 
-    assert_eq!(results.expand, "names,schema");
+    assert_eq!(results.expand, Some(String::from("names,schema")));
     assert_eq!(results.start_at, 0);
     assert_eq!(results.max_results, 50);
     assert_eq!(results.total, 0);
