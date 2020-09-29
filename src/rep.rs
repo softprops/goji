@@ -1,7 +1,7 @@
 // Third party
 
-use serde::Deserialize;
-use serde::Serialize;
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
+use serde_json;
 use std::collections::BTreeMap;
 
 // Ours
@@ -164,14 +164,12 @@ impl Issue {
             .to_string()
     }
 
-    pub fn try_from_custom_issue<S: serde::Serialize>(
-        custom_issue: &S,
-    ) -> serde_json::Result<Self> {
+    pub fn try_from_custom_issue<S: Serialize>(custom_issue: &S) -> serde_json::Result<Self> {
         let serialized_data = serde_json::to_string(custom_issue)?;
         Ok(serde_json::from_str(&serialized_data)?)
     }
 
-    pub fn try_to_custom_issue<'de, D: serde::Deserialize<'de>>(&self) -> serde_json::Result<Self> {
+    pub fn try_to_custom_issue<D: DeserializeOwned>(&self) -> serde_json::Result<D> {
         let serialized_data = serde_json::to_string(self)?;
         Ok(serde_json::from_str(&serialized_data)?)
     }
