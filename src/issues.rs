@@ -76,6 +76,11 @@ pub struct EditIssue<T: Serialize> {
     pub fields: BTreeMap<String, T>,
 }
 
+#[derive(Deserialize, Serialize, Debug)]
+pub struct EditCustomIssue<CustomFields> {
+    pub fields: CustomFields,
+}
+
 #[derive(Deserialize, Debug)]
 pub struct IssueResults {
     pub expand: Option<String>,
@@ -132,6 +137,18 @@ impl Issues {
     /// See this [jira docs](https://docs.atlassian.com/software/jira/docs/api/REST/latest/#api/2/issue-editIssue)
     /// for more information
     pub fn edit<I, T>(&self, id: I, data: EditIssue<T>) -> Result<()>
+    where
+        I: Into<String>,
+        T: Serialize,
+    {
+        self.jira.put("api", &format!("/issue/{}", id.into()), data)
+    }
+
+    /// Edit an issue
+    ///
+    /// See this [jira docs](https://docs.atlassian.com/software/jira/docs/api/REST/latest/#api/2/issue-editIssue)
+    /// for more information
+    pub fn edit_custom_issue<I, T>(&self, id: I, data: EditCustomIssue<T>) -> Result<()>
     where
         I: Into<String>,
         T: Serialize,
