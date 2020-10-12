@@ -110,7 +110,7 @@ impl Issues {
     where
         I: Into<String>,
     {
-        self.jira.get("agile", &format!("/issue/{}", id.into()))
+        self.jira.get("api", &format!("/issue/{}", id.into()))
     }
 
     /// Create a new issue
@@ -168,7 +168,7 @@ impl Issues {
         path.push(query);
 
         self.jira
-            .get::<IssueResults>("agile", path.join("?").as_ref())
+            .get::<IssueResults>("api", path.join("?").as_ref())
     }
 
     /// Returns a type which may be used to iterate over consecutive pages of results

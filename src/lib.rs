@@ -21,6 +21,7 @@ use serde::Serialize;
 use url::Url;
 
 mod builder;
+pub mod components;
 mod errors;
 pub mod issues;
 mod rep;
@@ -29,6 +30,7 @@ mod transitions;
 mod versions;
 
 pub use crate::builder::*;
+pub use crate::components::*;
 pub use crate::errors::*;
 pub use crate::issues::*;
 pub use crate::rep::*;
@@ -126,6 +128,11 @@ impl Jira {
     #[tracing::instrument]
     pub fn issues(&self) -> Issues {
         Issues::new(self)
+    }
+
+    // Return components interface
+    pub fn components(&self) -> Components {
+        Components::new(self)
     }
 
     // Return boards interface
