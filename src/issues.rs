@@ -4,7 +4,7 @@
 use url::form_urlencoded;
 
 // Ours
-use crate::{Board, Issue, Jira, Result, SearchOptions};
+use crate::{Board, EmptyResponse, Issue, Jira, Result, SearchOptions};
 
 /// issue options
 #[derive(Debug)]
@@ -75,6 +75,14 @@ pub struct IssueResults {
     pub issues: Vec<Issue>,
 }
 
+impl Assignee {
+    pub fn new(name: &str) -> Self {
+        Assignee {
+            name: name.to_string(),
+        }
+    }
+}
+
 impl Issues {
     pub fn new(jira: &Jira) -> Issues {
         Issues { jira: jira.clone() }
@@ -107,6 +115,14 @@ impl Issues {
     /// https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/board-getIssuesForBoard
     pub fn iter<'a>(&self, board: &'a Board, options: &'a SearchOptions) -> Result<IssuesIter<'a>> {
         IssuesIter::new(board, options, &self.jira)
+    }
+
+    /// Assigne an issue to an user
+    /// https://docs.atlassian.com/software/jira/docs/api/REST/latest/#api/2/issue-assign
+    pub fn assign(&self, issue_id: &str, assignee: &Assignee) -> Result<EmptyResponse> {
+        let path = format!("/issue/{}/assignee", issue_id);
+
+        self.jira.put("api", &path, &assignee)
     }
 }
 
