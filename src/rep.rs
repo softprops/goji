@@ -313,6 +313,7 @@ pub struct User {
     #[serde(rename = "emailAddress")]
     pub email_address: String,
     pub key: Option<String>,
+    pub name: String,
     #[serde(rename = "self")]
     pub self_link: String,
     #[serde(rename = "timeZone")]
