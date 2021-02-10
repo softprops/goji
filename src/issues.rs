@@ -36,6 +36,7 @@ pub struct Project {
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Component {
+    pub id: String,
     pub name: String,
 }
 
