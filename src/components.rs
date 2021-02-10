@@ -1,10 +1,7 @@
 //! Interfaces for accessing and managing issues
 
-// Third party
-use url::form_urlencoded;
-
 // Ours
-use crate::{Component, Jira, Result, SearchOptions};
+use crate::{Component, Jira, Result};
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct CreateComponent {
@@ -52,18 +49,17 @@ impl Components {
         self.jira.post("api", "/component", data)
     }
 
-    //TODO
-    // /// Edit a component
-    // ///
-    // /// See this [jira docs](https://docs.atlassian.com/software/jira/docs/api/REST/latest/#api/2/component-updateComponent)
-    // /// for more information
-    // pub fn edit<I, T>(&self, id: I, data: EditIssue<T>) -> Result<()>
-    // where
-    //     I: Into<String>,
-    //     T: Serialize,
-    // {
-    //     self.jira.put("api", &format!("/issue/{}", id.into()), data)
-    // }
+    /// Edit a component
+    ///
+    /// See this [jira docs](https://docs.atlassian.com/software/jira/docs/api/REST/latest/#api/2/component-updateComponent)
+    /// for more information
+    pub fn edit<I>(&self, id: I, data: CreateComponent) -> Result<CreateComponentResponse>
+    where
+        I: Into<String>,
+    {
+        self.jira
+            .put("api", &format!("/component/{}", id.into()), data)
+    }
 
     /// Returns all components of a project
     ///
