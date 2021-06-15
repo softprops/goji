@@ -20,6 +20,7 @@ use serde::de::DeserializeOwned;
 use serde::Serialize;
 use url::Url;
 
+pub mod attachments;
 mod builder;
 pub mod components;
 mod errors;
@@ -29,6 +30,7 @@ mod search;
 mod transitions;
 mod versions;
 
+pub use crate::attachments::*;
 pub use crate::builder::*;
 pub use crate::components::*;
 pub use crate::errors::*;
@@ -130,6 +132,11 @@ impl Jira {
         Issues::new(self)
     }
 
+    // Return attachments interface
+    pub fn attachments(&self) -> Attachments {
+        Attachments::new(self)
+    }
+
     // Return components interface
     pub fn components(&self) -> Components {
         Components::new(self)
@@ -150,6 +157,13 @@ impl Jira {
     #[tracing::instrument]
     pub fn versions(&self) -> Versions {
         Versions::new(self)
+    }
+
+    fn delete<D>(&self, api_name: &str, endpoint: &str) -> Result<D>
+    where
+        D: DeserializeOwned,
+    {
+        self.request::<D>(Method::DELETE, api_name, endpoint, None)
     }
 
     fn get<D>(&self, api_name: &str, endpoint: &str) -> Result<D>

@@ -1,4 +1,4 @@
-//! Interfaces for accessing and managing issues
+//! Interfaces for accessing and managing components
 
 // Ours
 use crate::{Component, Jira, Result};
