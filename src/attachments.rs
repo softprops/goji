@@ -61,11 +61,14 @@ impl Attachments {
     ///
     /// See this [jira docs](https://docs.atlassian.com/software/jira/docs/api/REST/8.13.8/#api/2/attachment-removeAttachment)
     /// for more information
-    pub fn delete<I>(&self, id: I) -> Result<AttachmentResponse>
+    pub fn delete<I>(&self, id: I) -> Result<()>
     where
         I: Into<String>,
     {
-        self.jira
-            .delete("api", &format!("/attachment/{}", id.into()))
+        let _res: Option<AttachmentResponse> = self
+            .jira
+            .delete("api", &format!("/attachment/{}", id.into()))?;
+
+        Ok(())
     }
 }
