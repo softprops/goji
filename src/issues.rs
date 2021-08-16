@@ -4,7 +4,7 @@
 use url::form_urlencoded;
 
 // Ours
-use crate::{Board, Issue, Jira, Result, SearchOptions};
+use crate::{Board, Comment, Issue, Jira, Result, SearchOptions};
 
 /// issue options
 #[derive(Debug)]
@@ -75,6 +75,11 @@ pub struct IssueResults {
     pub issues: Vec<Issue>,
 }
 
+#[derive(Debug, Serialize)]
+pub struct AddComment {
+    pub body: String,
+}
+
 impl Issues {
     pub fn new(jira: &Jira) -> Issues {
         Issues { jira: jira.clone() }
@@ -107,6 +112,17 @@ impl Issues {
     /// https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/board-getIssuesForBoard
     pub fn iter<'a>(&self, board: &'a Board, options: &'a SearchOptions) -> Result<IssuesIter<'a>> {
         IssuesIter::new(board, options, &self.jira)
+    }
+
+    pub fn comment<K>(&self, key: K, data: AddComment) -> Result<Comment>
+    where
+        K: Into<String>,
+    {
+        self.jira.post(
+            "api",
+            format!("/issue/{}/comment", key.into()).as_ref(),
+            data,
+        )
     }
 }
 
