@@ -163,7 +163,7 @@ impl Jira {
                 errors: serde_json::from_str::<Errors>(&body)?,
             }),
             _ => {
-                let data = if body == "" { "null" } else { &body };
+                let data = if body.is_empty() { "null" } else { &body };
                 Ok(serde_json::from_str::<D>(data)?)
             }
         }
