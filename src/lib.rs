@@ -45,6 +45,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 pub enum Credentials {
     /// username and password credentials
     Basic(String, String), // todo: OAuth
+    Bearer(String),
 }
 
 /// Entrypoint into client interface
@@ -143,6 +144,9 @@ impl Jira {
         let builder = match self.credentials {
             Credentials::Basic(ref user, ref pass) => req
                 .basic_auth(user.to_owned(), Some(pass.to_owned()))
+                .header(CONTENT_TYPE, "application/json"),
+            Credentials::Bearer(ref token) => req
+                .bearer_auth(token.to_owned())
                 .header(CONTENT_TYPE, "application/json"),
         };
 
