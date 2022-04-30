@@ -52,6 +52,7 @@ pub enum Credentials {
     Anonymous,
     /// username and password credentials
     Basic(String, String), // todo: OAuth
+    Bearer(String),
 }
 
 impl Credentials {
@@ -61,6 +62,7 @@ impl Credentials {
             Credentials::Basic(ref user, ref pass) => {
                 request.basic_auth(user.to_owned(), Some(pass.to_owned()))
             }
+            Credentials::Bearer(ref token) => request.bearer_auth(token.to_owned()),
         }
     }
 }
