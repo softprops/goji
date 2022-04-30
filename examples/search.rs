@@ -1,3 +1,4 @@
+use log::{error, info};
 extern crate env_logger;
 extern crate goji;
 
@@ -6,6 +7,9 @@ use std::env;
 
 fn main() {
     drop(env_logger::init());
+    for (key, value) in env::vars() {
+        info!("{:?}: {:?}", key, value);
+    }
     if let (Ok(host), Ok(user), Ok(pass)) = (
         env::var("JIRA_HOST"),
         env::var("JIRA_USER"),
@@ -37,7 +41,7 @@ fn main() {
                     );
                 }
             }
-            Err(err) => panic!("{:#?}", err),
+            Err(err) => error!("{:#?}", err),
         }
     }
 }

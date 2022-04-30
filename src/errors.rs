@@ -3,6 +3,7 @@ use reqwest::Error as HttpError;
 use reqwest::StatusCode;
 use serde_json::error::Error as SerdeError;
 use std::io::Error as IoError;
+use url::ParseError as ParseError;
 
 // Ours
 use crate::Errors;
@@ -25,6 +26,14 @@ pub enum Error {
     MethodNotAllowed,
     /// Page not found
     NotFound,
+    /// URI parse error
+    ParseError(ParseError),
+}
+
+impl From<ParseError> for Error {
+    fn from(error: ParseError) -> Error {
+        Error::ParseError(error)
+    }
 }
 
 impl From<SerdeError> for Error {
@@ -60,6 +69,7 @@ impl ::std::fmt::Display for Error {
             Unauthorized => writeln!(f, "Could not connect to Jira: Unauthorized!"),
             MethodNotAllowed => writeln!(f, "Could not connect to Jira: Method Not Allowed!",),
             NotFound => writeln!(f, "Could not connect to Jira: No Found!"),
+            ParseError(ref e) => writeln!(f, "Could not connect to Jira: {:?}!", e),
         }
     }
 }

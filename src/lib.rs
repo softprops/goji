@@ -18,6 +18,7 @@ use reqwest::{
 };
 use serde::de::DeserializeOwned;
 use serde::Serialize;
+use url::Url;
 
 mod builder;
 mod errors;
@@ -82,11 +83,14 @@ impl Jira {
     where
         H: Into<String>,
     {
-        Ok(Jira {
-            host: host.into(),
-            client: Client::new(),
-            credentials,
-        })
+        match Url::parse(&host.into()) {
+            Ok(host) => Ok(Jira {
+                host: host.into(),
+                client: Client::new(),
+                credentials,
+            }),
+            Err(error) => Err(Error::from(error))
+        }
     }
 
     /// creates a new instance of a jira client using a specified reqwest client
