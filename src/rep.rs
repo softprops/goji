@@ -146,7 +146,13 @@ impl Issue {
     }
 
     pub fn permalink(&self, jira: &Jira) -> String {
-        format!("{}/browse/{}", jira.host, self.key)
+        //format!("{}/browse/{}", jira.host, self.key)
+        jira.host
+            .join("/browse/")
+            .unwrap()
+            .join(&self.key)
+            .unwrap()
+            .to_string()
     }
 }
 

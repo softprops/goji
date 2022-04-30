@@ -3,7 +3,7 @@ use reqwest::Error as HttpError;
 use reqwest::StatusCode;
 use serde_json::error::Error as SerdeError;
 use std::io::Error as IoError;
-use url::ParseError as ParseError;
+use url::ParseError;
 
 // Ours
 use crate::Errors;

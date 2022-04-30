@@ -72,7 +72,7 @@ impl Credentials {
 /// https://docs.atlassian.com/jira/REST/latest/
 #[derive(Clone, Debug)]
 pub struct Jira {
-    host: String,
+    host: Url,
     credentials: Credentials,
     client: Client,
 }
@@ -85,11 +85,11 @@ impl Jira {
     {
         match Url::parse(&host.into()) {
             Ok(host) => Ok(Jira {
-                host: host.into(),
+                host,
                 client: Client::new(),
                 credentials,
             }),
-            Err(error) => Err(Error::from(error))
+            Err(error) => Err(Error::from(error)),
         }
     }
 
@@ -98,11 +98,14 @@ impl Jira {
     where
         H: Into<String>,
     {
-        Ok(Jira {
-            host: host.into(),
-            credentials,
-            client,
-        })
+        match Url::parse(&host.into()) {
+            Ok(host) => Ok(Jira {
+                host,
+                client,
+                credentials,
+            }),
+            Err(error) => Err(Error::from(error)),
+        }
     }
 
     /// return transitions interface
