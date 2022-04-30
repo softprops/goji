@@ -1,5 +1,5 @@
 use crate::{
-    Error, Jira, Result, Version, VersionCreationBody, VersionMoveAfterBody, VersionUpdateBody,
+    Jira, Result, Version, VersionCreationBody, VersionMoveAfterBody, VersionUpdateBody,
 };
 
 pub struct Versions {
