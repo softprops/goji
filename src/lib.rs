@@ -12,7 +12,10 @@ extern crate url;
 use std::io::Read;
 
 use reqwest::header::CONTENT_TYPE;
-use reqwest::{blocking::{Client, RequestBuilder}, Method, StatusCode};
+use reqwest::{
+    blocking::{Client, RequestBuilder},
+    Method, StatusCode,
+};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 
@@ -57,7 +60,7 @@ impl Credentials {
             Credentials::Anonymous => request,
             Credentials::Basic(ref user, ref pass) => {
                 request.basic_auth(user.to_owned(), Some(pass.to_owned()))
-            },
+            }
         }
     }
 }
@@ -168,7 +171,8 @@ impl Jira {
         let url = format!("{}/rest/{}/latest{}", self.host, api_name, endpoint);
         debug!("url -> {:?}", url);
 
-        let mut req = self.client
+        let mut req = self
+            .client
             .request(method, &url)
             .header(CONTENT_TYPE, "application/json");
 

@@ -1,6 +1,4 @@
-use crate::{
-    Jira, Result, Version, VersionCreationBody, VersionMoveAfterBody, VersionUpdateBody,
-};
+use crate::{Jira, Result, Version, VersionCreationBody, VersionMoveAfterBody, VersionUpdateBody};
 
 pub struct Versions {
     jira: Jira,
