@@ -70,6 +70,13 @@ impl Sprints {
 
         self.jira.post("agile", &path, data)
     }
+    /// returns a single sprint data
+    /// https://docs.atlassian.com/jira-software/REST/7.3.1/#agile/1.0/sprint-getSprint
+    pub fn get(&self, sprint_id: u64) -> Result<Sprint> {
+        let path = format!("/sprint/{}", sprint_id);
+
+        self.jira.get::<Sprint>("agile", &path)
+    }
 
     /// runs a type why may be used to iterate over consecutive pages of results
     /// https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/board-getAllBoards
