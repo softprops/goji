@@ -169,7 +169,7 @@ impl Issues {
         path.push(query);
 
         self.jira
-            .get::<IssueResults>("api", path.join("?").as_ref())
+            .get::<IssueResults>("agile", path.join("?").as_ref())
     }
 
     /// Returns a type which may be used to iterate over consecutive pages of results
