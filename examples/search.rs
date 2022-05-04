@@ -1,4 +1,4 @@
-use tracing::{error, info, Level};
+use tracing::{error, Level};
 
 extern crate goji;
 
@@ -14,17 +14,12 @@ fn main() {
         .finish();
     tracing::subscriber::set_global_default(subscriber).expect("setting tracing default failed");
 
-    for (key, value) in env::vars() {
-        info!("{:?}: {:?}", key, value);
-    }
-    if let (Ok(host), Ok(user), Ok(pass)) = (
-        env::var("JIRA_HOST"),
-        env::var("JIRA_USER"),
-        env::var("JIRA_PASS"),
-    ) {
-        let query = env::args().nth(1).unwrap_or("assignee=doug".to_owned());
+    if let (Ok(host), Ok(token)) = (env::var("JIRA_HOST"), env::var("JIRA_TOKEN")) {
+        let query = env::args()
+            .nth(1)
+            .unwrap_or("assignee in (currentUser()) order by created DESC".to_owned());
 
-        let jira = Jira::new(host, Credentials::Basic(user, pass)).unwrap();
+        let jira = Jira::new(host, Credentials::Bearer(token)).unwrap();
 
         match jira.search().iter(query, &Default::default()) {
             Ok(results) => {

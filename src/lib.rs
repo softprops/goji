@@ -195,6 +195,7 @@ impl Jira {
         if let Some(body) = body {
             req = req.body(body);
         }
+        debug!("req '{:?}'", req);
 
         let mut res = req.send()?;
 
