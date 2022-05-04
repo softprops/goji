@@ -1,15 +1,15 @@
 //! Goji provides an interface for Jira's REST api
 
-#[macro_use]
-extern crate log;
 extern crate reqwest;
 extern crate serde;
+extern crate tracing;
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
 extern crate url;
 
 use std::io::Read;
+use tracing::debug;
 
 use reqwest::header::CONTENT_TYPE;
 use reqwest::{
@@ -117,25 +117,30 @@ impl Jira {
     }
 
     /// return search interface
+    #[tracing::instrument]
     pub fn search(&self) -> Search {
         Search::new(self)
     }
 
     // return issues interface
+    #[tracing::instrument]
     pub fn issues(&self) -> Issues {
         Issues::new(self)
     }
 
     // return boards interface
+    #[tracing::instrument]
     pub fn boards(&self) -> Boards {
         Boards::new(self)
     }
 
     // return boards interface
+    #[tracing::instrument]
     pub fn sprints(&self) -> Sprints {
         Sprints::new(self)
     }
 
+    #[tracing::instrument]
     pub fn versions(&self) -> Versions {
         Versions::new(self)
     }

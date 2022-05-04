@@ -1,12 +1,19 @@
-use log::{error, info};
-extern crate env_logger;
+use tracing::{error, info, Level};
+
 extern crate goji;
 
 use goji::{Credentials, Jira};
 use std::env;
 
 fn main() {
-    drop(env_logger::init());
+    let subscriber = tracing_subscriber::FmtSubscriber::builder()
+        // all spans/events with a level higher than TRACE (e.g, debug, info, warn, etc.)
+        // will be written to stdout.
+        .with_max_level(Level::TRACE)
+        // builds the subscriber.
+        .finish();
+    tracing::subscriber::set_global_default(subscriber).expect("setting tracing default failed");
+
     for (key, value) in env::vars() {
         info!("{:?}: {:?}", key, value);
     }
