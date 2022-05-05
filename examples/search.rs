@@ -7,19 +7,16 @@ use std::env;
 
 fn main() {
     let subscriber = tracing_subscriber::FmtSubscriber::builder()
-        // all spans/events with a level higher than TRACE (e.g, debug, info, warn, etc.)
-        // will be written to stdout.
         .with_max_level(Level::TRACE)
-        // builds the subscriber.
         .finish();
     tracing::subscriber::set_global_default(subscriber).expect("setting tracing default failed");
 
     if let (Ok(host), Ok(token)) = (env::var("JIRA_HOST"), env::var("JIRA_TOKEN")) {
         let query = env::args()
             .nth(1)
-            .unwrap_or("assignee in (currentUser()) order by created DESC".to_owned());
+            .unwrap_or("order by created DESC".to_owned());
 
-        let jira = Jira::new(host, Credentials::Bearer(token)).unwrap();
+        let jira = Jira::new(host, Credentials::Bearer(token)).expect("Error initializing Jira");
 
         match jira.search().iter(query, &Default::default()) {
             Ok(results) => {
@@ -45,5 +42,7 @@ fn main() {
             }
             Err(err) => error!("{:#?}", err),
         }
+    } else {
+        error!("Missing environment variable JIRA_HOST and/or JIRA_TOKEN");
     }
 }
