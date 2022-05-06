@@ -17,6 +17,10 @@ maintenance = { status = "actively-developed" }
 
 [dev-dependencies]
 tracing-subscriber = "0.3.11"
+skeptic = "0.13"
+
+[build-dependencies]
+skeptic = "0.13"
 
 [dependencies]
 tracing = "0.1.34"

@@ -1,8 +1,6 @@
-# goji [![Build Status](https://travis-ci.org/softprops/goji.svg?branch=master)](https://travis-ci.org/softprops/goji) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE) [![crates.io](http://meritbadge.herokuapp.com/goji)](https://crates.io/crates/goji) [![Released API docs](https://docs.rs/goji/badge.svg)](http://docs.rs/goji) [![Master API docs](https://img.shields.io/badge/docs-master-green.svg)](https://softprops.github.io/goji)
+# goji [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE) [![Released API docs](https://docs.rs/goji/badge.svg)](http://docs.rs/goji) [![Master API docs](https://img.shields.io/badge/docs-master-green.svg)](https://softprops.github.io/goji)
 
-## avrabe build status
-[![Rust](https://github.com/avrabe/goji/actions/workflows/rust.yml/badge.svg)](https://github.com/avrabe/goji/actions/workflows/rust.yml)
-[![codecov](https://codecov.io/gh/avrabe/goji/branch/main/graph/badge.svg?token=uAQXWlybzJ)](https://codecov.io/gh/avrabe/goji)
+## gouji [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE) [![Rust](https://github.com/wunderfrucht/gouqi/actions/workflows/rust.yml/badge.svg)](https://github.com/wunderfrucht/gouqi/actions/workflows/rust.yml) [![codecov](https://codecov.io/gh/avrabe/goji/branch/main/graph/badge.svg?token=uAQXWlybzJ)](https://codecov.io/gh/avrabe/goji)
 
 > a rust interface for [jira](https://www.atlassian.com/software/jira)
 
@@ -24,14 +22,12 @@ Basic usage requires a jira host, and a flavor of `jira::Credentials` for author
 Current support api support is limited to search and issue transitioning.
 
 ```rust
-extern crate env_logger;
 extern crate goji;
 
 use goji::{Credentials, Jira};
 use std::env;
 
-fn main() {
-    drop(env_logger::init());
+fn main() { 
     if let (Ok(host), Ok(user), Ok(pass)) =
         (
             env::var("JIRA_HOST"),
@@ -39,7 +35,7 @@ fn main() {
             env::var("JIRA_PASS"),
         )
     {
-        let query = env::args().nth(1).unwrap_or("assignee=doug".to_owned());
+        let query = env::args().nth(1).unwrap_or("order by created DESC".to_owned());
 
         let jira = Jira::new(host, Credentials::Basic(user, pass)).unwrap();
 
@@ -59,5 +55,7 @@ fn main() {
 
 Jira's name is a [shortened form of gojira](https://en.wikipedia.org/wiki/Jira_(software)),
 another name for godzilla. Goji is a play on that.
+
+Goji (Chinese: 枸杞; pinyin: gǒuqǐ)
 
 Doug Tangren (softprops) 2016-2018
