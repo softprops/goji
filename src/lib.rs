@@ -159,6 +159,7 @@ impl Jira {
         Versions::new(self)
     }
 
+    #[tracing::instrument]
     fn delete<D>(&self, api_name: &str, endpoint: &str) -> Result<D>
     where
         D: DeserializeOwned,
@@ -166,6 +167,7 @@ impl Jira {
         self.request::<D>(Method::DELETE, api_name, endpoint, None)
     }
 
+    #[tracing::instrument]
     fn get<D>(&self, api_name: &str, endpoint: &str) -> Result<D>
     where
         D: DeserializeOwned,
@@ -193,6 +195,7 @@ impl Jira {
         self.request::<D>(Method::PUT, api_name, endpoint, Some(data.into_bytes()))
     }
 
+    #[tracing::instrument]
     fn request<D>(
         &self,
         method: Method,
