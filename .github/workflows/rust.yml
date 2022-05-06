@@ -37,6 +37,23 @@ jobs:
     - name: Run udeps
       run: cargo +nightly udeps
 
+  cargo-deny:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        checks:
+          - advisories
+          - bans licenses sources
+
+    # Prevent sudden announcement of a new advisory from failing ci:
+    continue-on-error: ${{ matrix.checks == 'advisories' }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: EmbarkStudios/cargo-deny-action@v1
+      with:
+        command: check ${{ matrix.checks }}
+
   codecov-check:
     name: codecov-check
     runs-on: ubuntu-latest
