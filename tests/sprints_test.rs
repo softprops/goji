@@ -2,6 +2,7 @@ extern crate goji;
 extern crate serde_json;
 
 use goji::sprints::*;
+use time::macros::datetime;
 
 #[test]
 fn deserialise_sprint() {
@@ -50,15 +51,16 @@ fn deserialise_sprint_with_optional_fields() {
     );
     assert_eq!(
         sprint.start_date,
-        Some("2015-04-11T15:22:00.000+10:00".to_owned())
+        Some(datetime!(2015-04-11 15:22:00.000 +10:00))
     );
+
     assert_eq!(
         sprint.end_date,
-        Some("2015-04-20T01:22:00.000+10:00".to_owned())
+        Some(datetime!(2015-04-20 01:22:00.000 +10:00))
     );
     assert_eq!(
         sprint.complete_date,
-        Some("2015-04-20T11:04:00.000+10:00".to_owned())
+        Some(datetime!(2015-04-20 11:04:00.000 +10:00))
     );
     assert_eq!(sprint.origin_board_id, Some(5));
 }

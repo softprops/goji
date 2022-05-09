@@ -23,10 +23,9 @@ fn main() {
 
         let sprints = Sprints::new(&jira);
 
-        if let Ok(sprint) = sprints.get(sprint_id) {
-            println!("{:?}", sprint);
-        } else {
-            error!("error")
+        match sprints.get(sprint_id) {
+            Ok(sprint) => println!("{:?}", sprint),
+            e => error!("{:?}", e),
         }
     } else {
         error!("Missing one or more environment variables JIRA_HOST, JIRA_USER, JIRA_PASS!");

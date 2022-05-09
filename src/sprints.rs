@@ -1,6 +1,7 @@
 //! Interfaces for accessing and managing sprints
 
 // Third party
+use time::OffsetDateTime;
 use url::form_urlencoded;
 
 // Ours
@@ -11,19 +12,23 @@ pub struct Sprints {
     jira: Jira,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
 pub struct Sprint {
     pub id: u64,
     #[serde(rename = "self")]
     pub self_link: String,
     pub name: String,
     pub state: Option<String>,
-    #[serde(rename = "startDate")]
-    pub start_date: Option<String>,
-    #[serde(rename = "endDate")]
-    pub end_date: Option<String>,
-    #[serde(rename = "completeDate")]
-    pub complete_date: Option<String>,
+    #[serde(default, rename = "startDate", with = "time::serde::rfc3339::option")]
+    pub start_date: Option<OffsetDateTime>,
+    #[serde(default, rename = "endDate", with = "time::serde::rfc3339::option")]
+    pub end_date: Option<OffsetDateTime>,
+    #[serde(
+        default,
+        rename = "completeDate",
+        with = "time::serde::rfc3339::option"
+    )]
+    pub complete_date: Option<OffsetDateTime>,
     #[serde(rename = "originBoardId")]
     pub origin_board_id: Option<u64>,
 }
