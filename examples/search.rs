@@ -7,7 +7,7 @@ use std::env;
 
 fn main() {
     let subscriber = tracing_subscriber::FmtSubscriber::builder()
-        .with_max_level(Level::WARN)
+        .with_max_level(Level::TRACE)
         .finish();
     tracing::subscriber::set_global_default(subscriber).expect("setting tracing default failed");
 
@@ -18,7 +18,7 @@ fn main() {
     ) {
         let query = env::args()
             .nth(1)
-            .unwrap_or("order by created DESC".to_owned());
+            .unwrap_or_else(|| "order by created DESC".to_owned());
 
         let jira =
             Jira::new(host, Credentials::Basic(user, password)).expect("Error initializing Jira");
@@ -29,19 +29,19 @@ fn main() {
                     println!(
                         "{} {} ({}): reporter {} assignee {}",
                         issue.key,
-                        issue.summary().unwrap_or("???".to_owned()),
+                        issue.summary().unwrap_or_else(|| "???".to_owned()),
                         issue
                             .status()
                             .map(|value| value.name,)
-                            .unwrap_or("???".to_owned(),),
+                            .unwrap_or_else(|| "???".to_owned()),
                         issue
                             .reporter()
                             .map(|value| value.display_name,)
-                            .unwrap_or("???".to_owned(),),
+                            .unwrap_or_else(|| "???".to_owned()),
                         issue
                             .assignee()
                             .map(|value| value.display_name,)
-                            .unwrap_or("???".to_owned(),)
+                            .unwrap_or_else(|| "???".to_owned())
                     );
                 }
             }

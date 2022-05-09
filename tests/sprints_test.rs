@@ -81,6 +81,6 @@ fn deserialise_sprint_results() {
 
     assert_eq!(sprint_results.max_results, 50u64);
     assert_eq!(sprint_results.start_at, 0u64);
-    assert_eq!(sprint_results.is_last, true);
+    assert!(sprint_results.is_last);
     assert_eq!(sprint_results.values.len(), 1);
 }

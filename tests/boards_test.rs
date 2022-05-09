@@ -42,6 +42,6 @@ fn deserialise_board_results() {
 
     assert_eq!(board_results.max_results, 50u64);
     assert_eq!(board_results.start_at, 0u64);
-    assert_eq!(board_results.is_last, true);
+    assert!(board_results.is_last);
     assert_eq!(board_results.values.len(), 1);
 }
