@@ -78,11 +78,11 @@ impl Issue {
     }
 
     fn extract_offset_date_time(&self, field: &str) -> Option<OffsetDateTime> {
-        match self.string_field(&field) {
+        match self.string_field(field) {
             Some(Ok(mut created)) => {
                 // Jira return the timezone as "+0200" while RFC3339 assumes "+02:00".
                 // fix this.
-                if !created.ends_with("Z") {
+                if !created.ends_with('Z') {
                     let last = created.pop().expect("Too short");
                     let before = created.pop().expect("Too short");
                     created.push(':');
