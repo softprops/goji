@@ -114,6 +114,18 @@ impl Issues {
         self.jira.get("api", &format!("/issue/{}", id.into()))
     }
 
+    /// Get a single custom issue
+    ///
+    /// See this [jira docs](https://docs.atlassian.com/jira-software/REST/latest/#agile/1.0/issue)
+    /// for more information
+    pub fn get_custom_issue<I, D>(&self, id: I) -> Result<EditCustomIssue<D>>
+    where
+        D: serde::de::DeserializeOwned,
+        I: Into<String>
+    {
+        self.jira.get("api", &format!("/issue/{}", id.into()))
+    }
+
     /// Create a new issue
     ///
     /// See this [jira docs](https://docs.atlassian.com/software/jira/docs/api/REST/latest/#api/2/issue-createIssue)
