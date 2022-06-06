@@ -206,12 +206,12 @@ impl Jira {
     where
         D: DeserializeOwned,
     {
-        let url = format!("{}/rest/{}/latest{}", self.host, api_name, endpoint);
+        let url = self.host.join(&format!("rest/{}/latest{}", api_name, endpoint))?;
         debug!("url -> {:?}", url);
 
         let mut req = self
             .client
-            .request(method, &url)
+            .request(method, url)
             .header(CONTENT_TYPE, "application/json");
 
         req = self.credentials.apply(req);
