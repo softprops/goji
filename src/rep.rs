@@ -504,3 +504,8 @@ pub struct Resolution {
 pub struct Transition {
     pub id: String,
 }
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct Session {
+    pub name: String,
+}

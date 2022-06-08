@@ -159,6 +159,10 @@ impl Jira {
         Versions::new(self)
     }
 
+    pub fn session(&self) -> Result<Session> {
+        self.get("auth", "/session")
+    }
+
     #[tracing::instrument]
     fn delete<D>(&self, api_name: &str, endpoint: &str) -> Result<D>
     where
@@ -206,7 +210,9 @@ impl Jira {
     where
         D: DeserializeOwned,
     {
-        let url = self.host.join(&format!("rest/{}/latest{}", api_name, endpoint))?;
+        let url = self
+            .host
+            .join(&format!("rest/{}/latest{}", api_name, endpoint))?;
         debug!("url -> {:?}", url);
 
         let mut req = self
