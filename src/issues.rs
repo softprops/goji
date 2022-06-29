@@ -121,7 +121,7 @@ impl Issues {
     pub fn get_custom_issue<I, D>(&self, id: I) -> Result<EditCustomIssue<D>>
     where
         D: serde::de::DeserializeOwned,
-        I: Into<String>
+        I: Into<String>,
     {
         self.jira.get("api", &format!("/issue/{}", id.into()))
     }
