@@ -1,9 +1,9 @@
 # gouji
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
-[![Released API docs](https://img.shields.io/docsrs/gouji/latest)](http://docs.rs/gouqi)
+[![Released API docs](https://img.shields.io/docsrs/gouqi/latest)](http://docs.rs/gouqi)
 [![Rust](https://github.com/wunderfrucht/gouqi/actions/workflows/rust.yml/badge.svg)](https://github.com/wunderfrucht/gouqi/actions/workflows/rust.yml)
-[![codecov](https://codecov.io/gh/wunderfrucht/gouqi/branch/main/graph/badge.svg?token=uAQXWlybzJ)](https://codecov.io/gh/wunderfrucht/gouqi) 
+[![codecov](https://codecov.io/gh/wunderfrucht/gouqi/branch/main/graph/badge.svg?token=uAQXWlybzJ)](https://codecov.io/gh/wunderfrucht/gouqi)
 
 > a rust interface for [jira](https://www.atlassian.com/software/jira)
 
