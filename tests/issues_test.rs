@@ -1,7 +1,6 @@
-extern crate goji;
 extern crate serde_json;
 
-use goji::issues::*;
+use gouqi::issues::*;
 
 #[test]
 fn deserialise_issue_results() {

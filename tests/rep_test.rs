@@ -1,7 +1,7 @@
-extern crate goji;
+extern crate gouqi;
 extern crate serde_json;
 
-use goji::*;
+use gouqi::*;
 use time::macros::datetime;
 
 const JIRA_HOST: &str = "http://jira.com";

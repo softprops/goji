@@ -1,8 +1,7 @@
-extern crate goji;
 extern crate serde_json;
 extern crate url;
 
-use goji::*;
+use gouqi::*;
 use std::collections::HashMap;
 use url::form_urlencoded;
 

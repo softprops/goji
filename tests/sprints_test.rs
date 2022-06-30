@@ -1,7 +1,6 @@
-extern crate goji;
 extern crate serde_json;
 
-use goji::sprints::*;
+use gouqi::sprints::*;
 use time::macros::datetime;
 
 #[test]

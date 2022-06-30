@@ -1,6 +1,6 @@
-extern crate goji;
+extern crate gouqi;
 
-use goji::{Credentials, Jira, TransitionTriggerOptions};
+use gouqi::{Credentials, Jira, TransitionTriggerOptions};
 use std::env;
 use tracing::Level;
 

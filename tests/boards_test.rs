@@ -1,7 +1,7 @@
-extern crate goji;
+extern crate gouqi;
 extern crate serde_json;
 
-use goji::boards::*;
+use gouqi::boards::*;
 
 #[test]
 fn deserialise_board() {

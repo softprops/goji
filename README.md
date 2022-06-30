@@ -1,8 +1,13 @@
-# goji [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE) [![Released API docs](https://docs.rs/goji/badge.svg)](http://docs.rs/goji) [![Master API docs](https://img.shields.io/badge/docs-master-green.svg)](https://softprops.github.io/goji)
+# gouji
 
-## gouji [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE) [![Rust](https://github.com/wunderfrucht/gouqi/actions/workflows/rust.yml/badge.svg)](https://github.com/wunderfrucht/gouqi/actions/workflows/rust.yml) [![codecov](https://codecov.io/gh/wunderfrucht/gouqi/branch/main/graph/badge.svg?token=uAQXWlybzJ)](https://codecov.io/gh/wunderfrucht/gouqi)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
+[![Released API docs](https://img.shields.io/docsrs/gouji/latest)](http://docs.rs/gouqi)
+[![Rust](https://github.com/wunderfrucht/gouqi/actions/workflows/rust.yml/badge.svg)](https://github.com/wunderfrucht/gouqi/actions/workflows/rust.yml)
+[![codecov](https://codecov.io/gh/wunderfrucht/gouqi/branch/main/graph/badge.svg?token=uAQXWlybzJ)](https://codecov.io/gh/wunderfrucht/gouqi) 
 
 > a rust interface for [jira](https://www.atlassian.com/software/jira)
+
+Forked from goji https://softprops.github.io/goji
 
 ## install
 
@@ -10,7 +15,7 @@ Add the following to your `Cargo.toml` file
 
 ```toml
 [dependencies]
-goji = "0.2"
+gouqi = "0.3"
 ```
 
 ## usage
@@ -22,9 +27,9 @@ Basic usage requires a jira host, and a flavor of `jira::Credentials` for author
 Current support api support is limited to search and issue transitioning.
 
 ```rust
-extern crate goji;
+extern crate gouqi;
 
-use goji::{Credentials, Jira};
+use gouqi::{Credentials, Jira};
 use std::env;
 use tracing::error;
 

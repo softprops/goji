@@ -1,8 +1,8 @@
 use tracing::{error, Level};
 
-extern crate goji;
+extern crate gouqi;
 
-use goji::{Credentials, Jira, Sprints};
+use gouqi::{Credentials, Jira, Sprints};
 use std::env;
 
 fn main() {
