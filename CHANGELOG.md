@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1
+
+* Use ISO8601 for time conversion [#17](https://github.com/wunderfrucht/gouqi/issues/17)
+
 ## 0.3.0
 
 * Forked from <https://github.com/softprops/goji>
