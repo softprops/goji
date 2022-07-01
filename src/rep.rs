@@ -2,7 +2,7 @@
 
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use std::collections::BTreeMap;
-use time::{format_description::well_known::Rfc3339, OffsetDateTime};
+use time::{format_description::well_known::Iso8601, OffsetDateTime};
 use tracing::error;
 
 // Ours
@@ -79,29 +79,16 @@ impl Issue {
 
     fn extract_offset_date_time(&self, field: &str) -> Option<OffsetDateTime> {
         match self.string_field(field) {
-            Some(Ok(mut created)) => {
-                // Jira return the timezone as "+0200" while RFC3339 assumes "+02:00".
-                // fix this.
-                if !created.ends_with('Z') {
-                    let last = created.pop().expect("Too short");
-                    let before = created.pop().expect("Too short");
-                    created.push(':');
-                    created.push(before);
-                    created.push(last);
+            Some(Ok(created)) => match OffsetDateTime::parse(created.as_ref(), &Iso8601::DEFAULT) {
+                Ok(offset_date_time) => Some(offset_date_time),
+                Err(error) => {
+                    error!(
+                        "Can't convert '{} = {:?}' into a OffsetDateTime. {:?}",
+                        field, created, error
+                    );
+                    None
                 }
-
-                //let foo1 = "2022-04-30T12:51:20.591+02:00";
-                match OffsetDateTime::parse(created.as_ref(), &Rfc3339) {
-                    Ok(offset_date_time) => Some(offset_date_time),
-                    Err(error) => {
-                        error!(
-                            "Can't convert '{} = {:?}' into a OffsetDateTime. {:?}",
-                            field, created, error
-                        );
-                        None
-                    }
-                }
-            }
+            },
             _ => None,
         }
     }

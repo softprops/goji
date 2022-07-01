@@ -12,21 +12,21 @@ pub struct Sprints {
     jira: Jira,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
+#[derive(Debug, PartialEq, Eq, Serialize, Deserialize, Clone)]
 pub struct Sprint {
     pub id: u64,
     #[serde(rename = "self")]
     pub self_link: String,
     pub name: String,
     pub state: Option<String>,
-    #[serde(default, rename = "startDate", with = "time::serde::rfc3339::option")]
+    #[serde(default, rename = "startDate", with = "time::serde::iso8601::option")]
     pub start_date: Option<OffsetDateTime>,
-    #[serde(default, rename = "endDate", with = "time::serde::rfc3339::option")]
+    #[serde(default, rename = "endDate", with = "time::serde::iso8601::option")]
     pub end_date: Option<OffsetDateTime>,
     #[serde(
         default,
         rename = "completeDate",
-        with = "time::serde::rfc3339::option"
+        with = "time::serde::iso8601::option"
     )]
     pub complete_date: Option<OffsetDateTime>,
     #[serde(rename = "originBoardId")]

@@ -7,7 +7,7 @@
 
 > a rust interface for [jira](https://www.atlassian.com/software/jira)
 
-Forked from goji https://softprops.github.io/goji
+Forked from goji <https://softprops.github.io/goji>
 
 ## install
 
