@@ -51,13 +51,20 @@ pub struct EmptyResponse;
 pub type Result<T> = std::result::Result<T, Error>;
 
 /// Types of authentication credentials
+///
+/// # Notes
+///
+/// - Personal Access Token are used with [`Credentials::Basic`] scheme as a password replacement and *not* as a [`Credentials::Bearer`]
+///   like the [API documentation sugest](https://developer.atlassian.com/server/jira/platform/rest-apis/#authentication-and-authorization).
 #[derive(Clone, Debug)]
 pub enum Credentials {
     /// Use no authentication
     Anonymous,
-    /// Username and password credentials
-    Basic(String, String), // todo: OAuth
+    /// Username and password credentials (Personal Access Token count as a password)
+    Basic(String, String),
+    /// Authentification via bearer token
     Bearer(String),
+    // TODO: Add OAuth
 }
 
 impl Credentials {
@@ -73,7 +80,7 @@ impl Credentials {
 }
 
 /// Entrypoint into client interface
-/// https://docs.atlassian.com/jira/REST/latest/
+/// <https://docs.atlassian.com/jira/REST/latest/>
 #[derive(Clone, Debug)]
 pub struct Jira {
     host: Url,
