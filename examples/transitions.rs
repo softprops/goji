@@ -2,16 +2,16 @@ extern crate gouqi;
 
 use gouqi::{Credentials, Jira, TransitionTriggerOptions};
 use std::env;
-use tracing::Level;
 
 fn main() {
-    let subscriber = tracing_subscriber::FmtSubscriber::builder()
-        // all spans/events with a level higher than TRACE (e.g, debug, info, warn, etc.)
-        // will be written to stdout.
-        .with_max_level(Level::TRACE)
-        // builds the subscriber.
-        .finish();
-    tracing::subscriber::set_global_default(subscriber).expect("setting tracing default failed");
+    // Initialize tracing global tracing subscriber
+    use tracing_subscriber::prelude::*;
+    tracing_subscriber::registry()
+        .with(tracing_subscriber::fmt::layer())
+        // Use RUST_LOG environment variable to set the tracing level
+        .with(tracing_subscriber::EnvFilter::from_default_env())
+        // Sets this to be the default, global collector for this application.
+        .init();
 
     if let (Ok(host), Ok(user), Ok(pass), Ok(key)) = (
         env::var("JIRA_HOST"),

@@ -12,7 +12,7 @@ readme = "README.md"
 edition = "2021"
 
 [dev-dependencies]
-tracing-subscriber = "0.3.11"
+tracing-subscriber = { version = "0.3.14", features = ["env-filter"] }
 skeptic = "0.13"
 
 [build-dependencies]
@@ -20,9 +20,12 @@ skeptic = "0.13"
 
 [dependencies]
 tracing = "0.1.35"
-reqwest = { version = "0.11.11", default_features = false, features = ["blocking", "rustls-tls"] }
+reqwest = { version = "0.11.11", default_features = false, features = [
+    "blocking",
+    "rustls-tls",
+] }
 serde = "1.0.137"
 serde_derive = "1.0.137"
 serde_json = "1.0.82"
 url = "2.2.2"
-time = { version="0.3.11", features =['serde-well-known', 'macros']}
+time = { version = "0.3.11", features = ['serde-well-known', 'macros'] }
