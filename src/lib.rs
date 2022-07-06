@@ -1,4 +1,4 @@
-//! Goji provides an interface for Jira's REST api
+//! Gouqi provides an interface for Jira's REST api
 
 extern crate reqwest;
 extern crate serde;
