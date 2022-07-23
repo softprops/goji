@@ -2,9 +2,9 @@ name: Rust
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 env:
   CARGO_TERM_COLOR: always
@@ -20,22 +20,46 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
+      - name: Enable cache
+        uses: Swatinem/rust-cache@v2
       - run: cargo install cargo-checkmate
       - run: cargo-checkmate
-      
+
+  semver-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+      - name: Install semver
+        run: rustup install nightly-2022-07-20 &&
+          rustup component add rustc-dev llvm-tools-preview --toolchain nightly-2022-07-20 &&
+          cargo +nightly-2022-07-20 install --git https://github.com/rust-lang/rust-semverver
+      - name: Enable cache
+        uses: Swatinem/rust-cache@v2
+      - name: Run semver
+        run: cargo semver | tee semver_out
+    # Until it is running, keep it as is
+    continue-on-error: true
+
   udeps-check:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Install stable toolchain
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: nightly
-        override: true
-    - name: Install udeps
-      run: cargo install cargo-udeps
-    - name: Run udeps
-      run: cargo +nightly udeps
+      - uses: actions/checkout@v3
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+      - name: Install udeps
+        run: cargo install cargo-udeps
+      - name: Enable cache
+        uses: Swatinem/rust-cache@v2
+      - name: Run udeps
+        run: cargo +nightly udeps
 
   cargo-deny:
     runs-on: ubuntu-latest
@@ -49,10 +73,10 @@ jobs:
     continue-on-error: ${{ matrix.checks == 'advisories' }}
 
     steps:
-    - uses: actions/checkout@v2
-    - uses: EmbarkStudios/cargo-deny-action@v1
-      with:
-        command: check ${{ matrix.checks }}
+      - uses: actions/checkout@v2
+      - uses: EmbarkStudios/cargo-deny-action@v1
+        with:
+          command: check ${{ matrix.checks }}
 
   codecov-check:
     name: codecov-check
@@ -64,17 +88,19 @@ jobs:
         with:
           toolchain: stable
           override: true
+      - name: Enable cache
+        uses: Swatinem/rust-cache@v2
       - name: Run cargo-tarpaulin
         uses: actions-rs/tarpaulin@v0.1
         with:
-          version: '0.15.0'
-          args: '-- --test-threads 1'
-  
+          version: "0.15.0"
+          args: "-- --test-threads 1"
+
       - name: Upload to codecov.io
         uses: codecov/codecov-action@v3.1.0
         with:
           token: ${{secrets.CODECOV_TOKEN}}
-  
+
       - name: Archive code coverage results
         uses: actions/upload-artifact@v3
         with:
