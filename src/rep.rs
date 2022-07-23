@@ -155,9 +155,9 @@ impl Issue {
     }
 
     pub fn comment(&self) -> Vec<Comment> {
-        self.field::<Comments>("comment")
+        self.field::<Vec<Comment>>("comment")
             .and_then(|value| value.ok())
-            .map(|value| value.comments)
+            .map(|value| value)
             .unwrap_or_default()
     }
 
@@ -207,11 +207,6 @@ pub struct Attachment {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Comments {
-    pub comments: Vec<Comment>,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
 pub struct Comment {
     pub id: Option<String>,
     #[serde(rename = "self")]
@@ -219,8 +214,10 @@ pub struct Comment {
     pub author: Option<User>,
     #[serde(rename = "updateAuthor")]
     pub update_author: Option<User>,
-    pub created: String,
-    pub updated: String,
+    #[serde(default, with = "time::serde::iso8601::option")]
+    pub created: Option<OffsetDateTime>,
+    #[serde(default, with = "time::serde::iso8601::option")]
+    pub updated: Option<OffsetDateTime>,
     pub body: String,
     pub visibility: Option<Visibility>,
 }
@@ -323,11 +320,11 @@ pub struct VersionUpdateBody {
 pub struct User {
     pub active: bool,
     #[serde(rename = "avatarUrls")]
-    pub avatar_urls: BTreeMap<String, String>,
+    pub avatar_urls: Option<BTreeMap<String, String>>,
     #[serde(rename = "displayName")]
     pub display_name: String,
     #[serde(rename = "emailAddress")]
-    pub email_address: String,
+    pub email_address: Option<String>,
     pub key: Option<String>,
     pub name: String,
     #[serde(rename = "self")]
