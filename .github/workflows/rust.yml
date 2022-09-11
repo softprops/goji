@@ -35,9 +35,9 @@ jobs:
           toolchain: nightly
           override: true
       - name: Install semver
-        run: rustup install nightly-2022-07-20 &&
-          rustup component add rustc-dev llvm-tools-preview --toolchain nightly-2022-07-20 &&
-          cargo +nightly-2022-07-20 install --git https://github.com/rust-lang/rust-semverver
+        run: rustup install nightly-2022-08-03 &&
+          rustup component add rustc-dev llvm-tools-preview --toolchain nightly-2022-08-03 &&
+          cargo +nightly-2022-08-03 install --git https://github.com/rust-lang/rust-semverver
       - name: Enable cache
         uses: Swatinem/rust-cache@v2
       - name: Run semver
